@@ -26,6 +26,7 @@ export class LocationPage {
 
   ionViewDidLoad() {
 	this.permissions.checkPermission(this.permissions.PERMISSION.LOCATION_HARDWARE).then(
+		
 	  result => {
 	  		if (result) {
 		  	  	if ( result.hasPermission) {
