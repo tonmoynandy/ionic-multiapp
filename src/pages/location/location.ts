@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { Diagnostic } from '@ionic-native/diagnostic';
+//import { AndroidPermissions } from '@ionic-native/android-permissions';
 /**
  * Generated class for the LocationPage page.
  *
@@ -20,13 +21,34 @@ export class LocationPage {
   	public navParams: NavParams,
   	public geoLoc : Geolocation,
   	public alertCtrl : AlertController,
-  	public permissions : AndroidPermissions) {
+  	public diagnostic: Diagnostic
+  	//public permissions : AndroidPermissions
+  	) {
 
   }
 
   ionViewDidLoad() {
-	this.permissions.checkPermission(this.permissions.PERMISSION.LOCATION_HARDWARE).then(
-		
+  	this.diagnostic.requestLocationAuthorization().then(()=>{
+	  	this.geoLoc.getCurrentPosition()
+	  .then((resp : any) =>
+	  {
+	  		this.locationData = resp;
+	     console.dir(resp);
+	     console.log('Geolocation mocked!');
+	  })
+	  .catch((error : any) =>
+	  {
+	     console.log('Error getting location', error);
+	  });
+	}).catch(error=>{
+			let alert = this.alertCtrl.create({
+					title : 'Error Permission Alert',
+					message :  error.json()
+				});
+			alert.present();
+		});;
+	/*this.permissions.checkPermission(this.permissions.PERMISSION.LOCATION_HARDWARE).then(
+
 	  result => {
 	  		if (result) {
 		  	  	if ( result.hasPermission) {
@@ -48,7 +70,7 @@ export class LocationPage {
 	  err => this.permissions.requestPermission(this.permissions.PERMISSION.LOCATION_HARDWARE)
 	);
 
-	this.permissions.requestPermissions([this.permissions.PERMISSION.LOCATION_HARDWARE, this.permissions.PERMISSION.GET_ACCOUNTS]);
+	this.permissions.requestPermissions([this.permissions.PERMISSION.LOCATION_HARDWARE, this.permissions.PERMISSION.GET_ACCOUNTS]);*/
     console.log('ionViewDidLoad LocationPage');
   }
 

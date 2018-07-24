@@ -11,9 +11,10 @@ import { LocationPage } from '../pages/location/location';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+//import { AndroidPermissions } from '@ionic-native/android-permissions';
 //import { AndroidPermissionsMock } from '@ionic-native-mocks/android-permissions';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Diagnostic } from '@ionic-native/diagnostic';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,9 @@ import { Geolocation } from '@ionic-native/geolocation';
   providers: [
     StatusBar,
     SplashScreen,
-    Geolocation,AndroidPermissions,
+    Geolocation,
+    Diagnostic
+    //AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
