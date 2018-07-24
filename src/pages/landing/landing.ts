@@ -24,9 +24,9 @@ export class LandingPage {
 
 
     console.log('ionViewDidLoad LandingPage');
-    let loader = this.loadCtrl.create({
-    	content : 'Synchronizing ...'
-    });
+    // let loader = this.loadCtrl.create({
+    // 	content : 'Synchronizing ...'
+    // });
    // loader.present();
   }
 

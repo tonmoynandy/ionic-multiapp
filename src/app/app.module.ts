@@ -12,9 +12,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { AndroidPermissions } from '@ionic-native/android-permissions';
-import { AndroidPermissionsMock } from '@ionic-native-mocks/android-permissions';
-import { Geolocation } from '@ionic-native/geolocation';
-import { GeolocationMock } from '@ionic-native-mocks/geolocation';
+//import { AndroidPermissionsMock } from '@ionic-native-mocks/android-permissions';
+//import { Geolocation } from '@ionic-native/geolocation';
 
 @NgModule({
   declarations: [
@@ -39,8 +38,7 @@ import { GeolocationMock } from '@ionic-native-mocks/geolocation';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: Geolocation, useClass: GeolocationMock },
-    { provide: AndroidPermissions, useClass: AndroidPermissionsMock },
+    Geolocation,AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
