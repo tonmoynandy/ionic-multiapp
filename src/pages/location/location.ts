@@ -16,8 +16,7 @@ import { Diagnostic } from '@ionic-native/diagnostic';
   templateUrl: 'location.html',
 })
 export class LocationPage {
-	locationData : any ;
-  constructor(public navCtrl: NavController, 
+	constructor(public navCtrl: NavController, 
   	public navParams: NavParams,
   	public geoLoc : Geolocation,
   	public alertCtrl : AlertController,
@@ -26,52 +25,38 @@ export class LocationPage {
   	) {
 
   }
-
+	locationData : any = {
+		lat : '',
+		lng : ''
+	}
   ionViewDidLoad() {
-  	this.diagnostic.requestLocationAuthorization().then(()=>{
-	  	this.geoLoc.getCurrentPosition()
+  	//this.diagnostic.requestLocationAuthorization().then(()=>{
+			let options = {
+				timeout :5000,
+			}
+	  	this.geoLoc.getCurrentPosition(options)
 	  .then((resp : any) =>
 	  {
-	  		this.locationData = resp;
-	     console.dir(resp);
-	     console.log('Geolocation mocked!');
+	     console.log(resp);
+			 console.log('Geolocation mocked!');
+			 this.locationData.lat = resp['coords']['latitude'];
+			 this.locationData.lng = resp['coords']['longitude'];
+			 
+
 	  })
 	  .catch((error : any) =>
 	  {
 	     console.log('Error getting location', error);
 	  });
-	}).catch(error=>{
-			let alert = this.alertCtrl.create({
-					title : 'Error Permission Alert',
-					message :  error.json()
-				});
-			alert.present();
-		});;
-	/*this.permissions.checkPermission(this.permissions.PERMISSION.LOCATION_HARDWARE).then(
-
-	  result => {
-	  		if (result) {
-		  	  	if ( result.hasPermission) {
-		  	  		this.geoLoc.getCurrentPosition()
-		  		      .then((resp : any) =>
-		  		      {
-		  		      		this.locationData = resp;
-		  		         console.dir(resp);
-		  		         console.log('Geolocation mocked!');
-		  		      })
-		  		      .catch((error : any) =>
-		  		      {
-		  		         console.log('Error getting location', error);
-		  		      });
-		  	  	}
-		  	  	console.log('Has permission?',result.hasPermission)
-	  	   }
-	  },
-	  err => this.permissions.requestPermission(this.permissions.PERMISSION.LOCATION_HARDWARE)
-	);
-
-	this.permissions.requestPermissions([this.permissions.PERMISSION.LOCATION_HARDWARE, this.permissions.PERMISSION.GET_ACCOUNTS]);*/
-    console.log('ionViewDidLoad LocationPage');
+	//}).catch(error=>{
+		//console.log(error);
+			// let alert = this.alertCtrl.create({
+			// 		title : 'Error Permission Alert',
+			// 		message :  error.json()
+			// 	});
+			// alert.present();
+		//});
+	console.log('ionViewDidLoad LocationPage');
   }
 
 }
