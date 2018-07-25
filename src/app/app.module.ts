@@ -40,7 +40,7 @@ import { Diagnostic } from '@ionic-native/diagnostic';
     StatusBar,
     SplashScreen,
     Geolocation,
-    Diagnostic
+    Diagnostic,
     //AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
