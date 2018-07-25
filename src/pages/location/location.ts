@@ -1,5 +1,5 @@
 import { Component , ViewChild, ElementRef} from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Platform, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Platform, LoadingController,  ActionSheetController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 
 /**
@@ -26,7 +26,8 @@ export class LocationPage {
 		public platform : Platform,
   	public geoLoc : Geolocation,
 		public alertCtrl : AlertController,
-		public loadCtrl : LoadingController
+		public loadCtrl : LoadingController,
+		public actionSheet : ActionSheetController
   	
   	//public permissions : AndroidPermissions
   	) {
@@ -45,7 +46,7 @@ export class LocationPage {
 					this.loadMap();
 					loader.dismiss();
 
-					
+
 				})
 				.catch((error : any) =>
 				{
@@ -67,10 +68,30 @@ export class LocationPage {
     let mapOptions = {
       center: latLng,
       zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			mapTypeControl : false,
+			fullscreenControl: false
     }
  
-    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+		this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+		setTimeout(()=>{
+			var searchInput = document.createElement("input");
+			searchInput.setAttribute("id",'pac-input');
+			searchInput.setAttribute("placeholder","Search Location");
+			var searchBox = new google.maps.places.Autocomplete(searchInput);
+			this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput);
+
+			searchBox.addListener('place_changed', ()=>{
+				let selectLocation = searchBox.getPlace();
+				this.locationData.lat = selectLocation.geometry.location.lat();
+				this.locationData.lng = selectLocation.geometry.location.lng();
+				console.log(selectLocation);
+				console.log(this.locationData);
+				this.map.setCenter(new google.maps.LatLng(this.locationData.lat, this.locationData.lng));
+				this.addMarker(this.locationData);
+			})
+		},1000);
+		
 		this.addMarker(this.locationData);
 	}
 	addMarker(latLng){
@@ -79,5 +100,22 @@ export class LocationPage {
 			animation: google.maps.Animation.DROP,
 			position: latLng
 		});
+	}
+	addActionSheet()
+	{
+		let buttons = [
+			{
+				text: 'Search Location',
+				handler: () => {
+					
+				}
+			}
+		];
+
+		const actions =this.actionSheet.create({
+			title : 'Action',
+			buttons : buttons
+		})
+		actions.present();
 	}
 }
