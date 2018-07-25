@@ -85,8 +85,8 @@ export class LocationPage {
 				let selectLocation = searchBox.getPlace();
 				this.locationData.lat = selectLocation.geometry.location.lat();
 				this.locationData.lng = selectLocation.geometry.location.lng();
-				console.log(selectLocation);
-				console.log(this.locationData);
+				//console.log(selectLocation);
+				//console.log(this.locationData);
 				this.map.setCenter(new google.maps.LatLng(this.locationData.lat, this.locationData.lng));
 				this.addMarker(this.locationData);
 			})
