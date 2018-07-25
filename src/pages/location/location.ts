@@ -31,11 +31,11 @@ export class LocationPage {
 	}
   ionViewDidLoad() {
   	
-	  	this.geoLoc.getCurrentPosition()
+	  this.geoLoc.getCurrentPosition()
 	  .then((resp : any) =>
 	  {
 	     console.log(resp);
-			 console.log('Geolocation mocked!');
+			 console.log('Geolocation mocked inserted!');
 			 this.locationData.lat = resp['coords']['latitude'];
 			 this.locationData.lng = resp['coords']['longitude'];
 			 
