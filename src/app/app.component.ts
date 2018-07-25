@@ -7,7 +7,7 @@ import { LandingPage } from '../pages/landing/landing';
 import { LocationPage } from '../pages/location/location';
 
 @Component({
-  templateUrl: 'app.html'
+templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
