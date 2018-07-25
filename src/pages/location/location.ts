@@ -31,10 +31,10 @@ export class LocationPage {
 	}
   ionViewDidLoad() {
   	//this.diagnostic.requestLocationAuthorization().then(()=>{
-			let options = {
-				timeout :5000,
-			}
-	  	this.geoLoc.getCurrentPosition(options)
+			// let options = {
+			// 	timeout :5000,
+			// }
+	  	this.geoLoc.getCurrentPosition()
 	  .then((resp : any) =>
 	  {
 	     console.log(resp);
