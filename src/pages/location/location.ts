@@ -30,10 +30,7 @@ export class LocationPage {
 		lng : ''
 	}
   ionViewDidLoad() {
-  	//this.diagnostic.requestLocationAuthorization().then(()=>{
-			// let options = {
-			// 	timeout :5000,
-			// }
+  	
 	  	this.geoLoc.getCurrentPosition()
 	  .then((resp : any) =>
 	  {
@@ -47,15 +44,8 @@ export class LocationPage {
 	  .catch((error : any) =>
 	  {
 	     console.log('Error getting location', error);
-	  });
-	//}).catch(error=>{
-		//console.log(error);
-			// let alert = this.alertCtrl.create({
-			// 		title : 'Error Permission Alert',
-			// 		message :  error.json()
-			// 	});
-			// alert.present();
-		//});
+		});
+		
 	console.log('ionViewDidLoad LocationPage');
   }
 
