@@ -20,30 +20,47 @@ export class LocationPage {
 	  directionsService: any ;
 	  directionsDisplay: any;
 	  directionStatus : boolean = false;
+	  directionDetailsStatus : boolean = false;
 	  directionType = [
 		{
 			name : 'Driving',
-			value : 'DRIVING' 
+			value : 'DRIVING',
+			color : 'red', 
 		},
 		{
 			name : 'Walking',
-			value : 'WALKING' 
+			value : 'WALKING',
+			color : 'green', 
 		},
 		{
 			name : 'Transit',
-			value : 'TRANSIT' 
+			value : 'TRANSIT' ,
+			color : 'blue',
 		},
 	  ];
 	  directionFrm = {
-		start :'',
-		end : '',
+		start : {
+			address:'',
+			position : {
+				lat : '',
+				lng : ''
+			}
+		},
+		end : {
+			address:'',
+			position : {
+				lat : '',
+				lng : ''
+			}
+		},
 		type : 'DRIVING',
-	  }
-  	currentMarker : any ;
+	  };
+	directionDetails : any  = [];
 	locationData : any = {
 		lat : '',
 		lng : ''
 	}
+	markers : any = [];
 	selectedLocation : any ;
 	constructor(public navCtrl: NavController, 
 		public navParams: NavParams,
@@ -53,8 +70,8 @@ export class LocationPage {
 		public loadCtrl : LoadingController,
 		public actionSheet : ActionSheetController,
 		public modal : ModalController
-  	
-  	//public permissions : AndroidPermissions
+
+
   	) {
 			let loader = this.loadCtrl.create({
 				content : "Map is Loading"
@@ -64,8 +81,8 @@ export class LocationPage {
 				this.geoLoc.getCurrentPosition()
 				.then((resp : any) =>
 				{
-					console.log(resp);
-					console.log('Geolocation mocked inserted!');
+					//console.log(resp);
+					//console.log('Geolocation mocked inserted!');
 					this.locationData.lat = resp['coords']['latitude'];
 					this.locationData.lng = resp['coords']['longitude'];
 					this.loadMap();
@@ -82,7 +99,7 @@ export class LocationPage {
 		}
 	
   ionViewDidLoad() {	
-		console.log('ionViewDidLoad LocationPage');
+		//console.log('ionViewDidLoad LocationPage');
 		
   }
 	
@@ -91,18 +108,25 @@ export class LocationPage {
     let latLng = new google.maps.LatLng(this.locationData.lat, this.locationData.lng);
  
     let mapOptions = {
-      center: latLng,
-      zoom: 15,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			mapTypeControl : false,
-			fullscreenControl: false
+		center: latLng,
+		zoom: 15,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		mapTypeControl : false,
+		fullscreenControl: false,
+		traffic : true
+		
     }
- 
-		this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-		this.directionsService = new google.maps.DirectionsService;
-		this.directionsDisplay = new google.maps.DirectionsRenderer;
-		this.directionsDisplay.setMap(this.map);
-		setTimeout(()=>{
+	    new Promise((resolve, reject )=>{
+			this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+			this.directionsService = new google.maps.DirectionsService;
+			this.directionsDisplay = new google.maps.DirectionsRenderer;
+			this.directionsDisplay.setMap(this.map);
+
+			var trafficLayer = new google.maps.TrafficLayer();
+			trafficLayer.setMap(this.map);
+		
+			resolve();
+		}).then(()=>{
 			let searchInput = document.getElementById("directionFrom");
 			searchInput.setAttribute("placeholder","Search Location");
 			
@@ -110,28 +134,52 @@ export class LocationPage {
 
 			searchBox.addListener('place_changed', ()=>{
 				let selectLocation = searchBox.getPlace();
+				//console.log(selectLocation);
 				this.selectedLocation = selectLocation;
 				this.locationData.lat = selectLocation.geometry.location.lat();
 				this.locationData.lng = selectLocation.geometry.location.lng();
-				this.directionFrm.start = selectLocation.formatted_address;
+				this.directionFrm.start = {
+					address : selectLocation.formatted_address,
+					position : {
+						lat: selectLocation.geometry.location.lat(),
+						lng : selectLocation.geometry.location.lng()
+					}
+				};
 
 				this.map.setCenter(new google.maps.LatLng(this.locationData.lat, this.locationData.lng));
-				this.addMarker(this.locationData);
+				this.clearMarkers().then(()=>{
+					this.addMarker(this.locationData);
+				});
+				
 			})
-		},1000);
+		})
 		
 		this.addMarker(this.locationData);
 	}
 	
 	addMarker(latLng){
-		if (this.currentMarker) {
-			this.currentMarker.setMap(null);
-		}
-		this.currentMarker = new google.maps.Marker({
+		// if (this.currentMarker) {
+		// 	this.currentMarker.setMap(null);
+		// }
+		this.markers.push(new google.maps.Marker({
 			map: this.map,
 			animation: google.maps.Animation.DROP,
-			position: latLng
-		});
+			position: latLng,
+			icon : 'assets/marker1.png'
+		}));
+	}
+	clearMarkers()
+	{	return new Promise((resolve, reject)=>{
+		
+			if (this.markers.length > 0) {
+				for(let m in this.markers) {
+					let marker  = this.markers[m];
+					marker.setMap(null);
+					this.markers.splice(m,1);
+				}
+			}
+			resolve();
+		})
 	}
 	addActionSheet()
 	{
@@ -151,7 +199,13 @@ export class LocationPage {
 						var searchBox = new google.maps.places.Autocomplete(searchInputTo);
 						searchBox.addListener('place_changed', ()=>{
 							let selectLocation = searchBox.getPlace();
-							this.directionFrm.end = selectLocation.formatted_address;
+							this.directionFrm.end = {
+								address : selectLocation.formatted_address,
+								position : {
+									lat: selectLocation.geometry.location.lat(),
+									lng : selectLocation.geometry.location.lng()
+								}
+							};
 							this.displayDirection();
 							
 						});
@@ -167,25 +221,45 @@ export class LocationPage {
 		actions.present();
 	}
 	changeDirectionType(type) {
-		this.directionFrm.type = type;
+		this.directionFrm.type = type['value'];
 		this.displayDirection();
 	}
 	displayDirection()
 	{
+		let colorObj = this.directionType.find((t)=>{
+			return t.value == this.directionFrm.type;
+		})
 		let directionsDisplay = this.directionsDisplay;
 
 		directionsDisplay.setMap(null);
 		directionsDisplay.setMap(this.map);
+		directionsDisplay.setOptions({
+			suppressMarkers: true,
+			polylineOptions: {
+				strokeColor: colorObj['color']
+			}
+		})
+		this.clearMarkers().then(()=>{
+			this.addMarker(this.directionFrm.start['position']);
+			this.addMarker(this.directionFrm.end['position']);
+		});
 		this.directionsService.route({
-			origin: this.directionFrm.start,
-			destination: this.directionFrm.end,
+			origin: this.directionFrm.start['address'],
+			destination: this.directionFrm.end['address'],
 			travelMode: this.directionFrm.type
 		}, function(response, status) {
 
 			directionsDisplay.setDirections(response);
-
-			console.log(response);
+			this.directionDetails = response['routes'];
+			console.log(this.directionDetails);
+			//console.log(JSON.stringify(response));
 			
 		});
+	}
+	showDirectionDetails()
+	{
+		//console.log("before "+ this.directionDetailsStatus);
+		this.directionDetailsStatus = (this.directionDetailsStatus == true)? false:true;
+		console.log(this.directionDetails);
 	}
 }

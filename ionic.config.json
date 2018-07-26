@@ -1,8 +1,8 @@
 {
   "name": "multiapp",
-  "app_id": "c1646957",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  }
+  },
+  "type": "ionic-angular",
+  "pro_id": "c1646957"
 }

@@ -25,15 +25,26 @@
     <table class="full-table" *ngIf="directionStatus">
       <tr>
         <td *ngFor="let type of directionType" class="text-center">
-          <button ion-button (click)="changeDirectionType(type.value)"   icon-only color="primary" [outline] = "directionFrm.type != type.value">
+          <button ion-button (click)="changeDirectionType(type)"   icon-only color="primary" [outline] = "directionFrm.type != type.value">
               <ion-icon name="car" *ngIf="type.name=='Driving'"></ion-icon>
               
               <ion-icon name="walk" *ngIf="type.name=='Walking'"></ion-icon>
               <ion-icon name="train" *ngIf="type.name=='Transit'"></ion-icon>
           </button>
         </td> 
+        <!-- *ngIf="directionFrm.start.address!='' && directionFrm.end.address!=''" -->
+        <td class="text-center" >
+          <button ion-button icon-only outline (click)="showDirectionDetails()">
+              <ion-icon name="share-alt"></ion-icon>
+          </button>
+        </td>
       </tr>
     </table>
+    <div class="direction-details-container" *ngIf="directionDetailsStatus">
+        <ion-card *ngFor="let route of directionDetails">
+          <p>{{ route.summary }}</p>
+        </ion-card>
+    </div>
   </div>
   <div #map id="map"></div> 
 </ion-content>
