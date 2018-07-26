@@ -14,6 +14,26 @@
 
 
 <ion-content>
-  
+  <div class="place-container">
+    <p>
+      <input type="text" placeholder="Search Location" id="directionFrom"/>
+    </p>
+    <p *ngIf="directionStatus">
+      <input type="text" placeholder="To" id="directionTo"/>
+    </p>
+    
+    <table class="full-table" *ngIf="directionStatus">
+      <tr>
+        <td *ngFor="let type of directionType" class="text-center">
+          <button ion-button (click)="changeDirectionType(type.value)"   icon-only color="primary" [outline] = "directionFrm.type != type.value">
+              <ion-icon name="car" *ngIf="type.name=='Driving'"></ion-icon>
+              
+              <ion-icon name="walk" *ngIf="type.name=='Walking'"></ion-icon>
+              <ion-icon name="train" *ngIf="type.name=='Transit'"></ion-icon>
+          </button>
+        </td> 
+      </tr>
+    </table>
+  </div>
   <div #map id="map"></div> 
 </ion-content>
