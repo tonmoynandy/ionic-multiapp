@@ -25,9 +25,18 @@ ion-modal {
     contain: strict;
     transform: translate(-50%,-50%);
 }
+.clearfix {
+    clear:both;
+}
 .full-table {
     width: 100%;
 }
 .text-center {
     text-align: center;
+}
+.display {
+    display: block;
+}
+.hidden {
+    display: none;
 }

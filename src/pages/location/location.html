@@ -32,19 +32,15 @@
               <ion-icon name="train" *ngIf="type.name=='Transit'"></ion-icon>
           </button>
         </td> 
-        <!-- *ngIf="directionFrm.start.address!='' && directionFrm.end.address!=''" -->
+        <!--  -->
         <td class="text-center" >
-          <button ion-button icon-only outline (click)="showDirectionDetails()">
+          <button ion-button icon-only outline (click)="showDirectionDetails()" *ngIf="directionFrm.start.address!='' && directionFrm.end.address!=''">
               <ion-icon name="share-alt"></ion-icon>
           </button>
         </td>
       </tr>
     </table>
-    <div class="direction-details-container" *ngIf="directionDetailsStatus">
-        <ion-card *ngFor="let route of directionDetails">
-          <p>{{ route.summary }}</p>
-        </ion-card>
-    </div>
+    <div class="direction-details-container" id="directionDetailsContent" [ngClass]="directionDetailsStatus"></div>
   </div>
   <div #map id="map"></div> 
 </ion-content>

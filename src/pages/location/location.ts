@@ -20,7 +20,7 @@ export class LocationPage {
 	  directionsService: any ;
 	  directionsDisplay: any;
 	  directionStatus : boolean = false;
-	  directionDetailsStatus : boolean = false;
+	  directionDetailsStatus  = 'hidden';
 	  directionType = [
 		{
 			name : 'Driving',
@@ -30,7 +30,7 @@ export class LocationPage {
 		{
 			name : 'Walking',
 			value : 'WALKING',
-			color : 'green', 
+			color : '#377fff', 
 		},
 		{
 			name : 'Transit',
@@ -85,6 +85,13 @@ export class LocationPage {
 					//console.log('Geolocation mocked inserted!');
 					this.locationData.lat = resp['coords']['latitude'];
 					this.locationData.lng = resp['coords']['longitude'];
+					this.directionFrm.start = {
+						address : 'Your Location',
+						position : {
+							lat: resp['coords']['latitude'],
+							lng : resp['coords']['longitude']
+						}
+					};
 					this.loadMap();
 					loader.dismiss();
 
@@ -109,7 +116,7 @@ export class LocationPage {
  
     let mapOptions = {
 		center: latLng,
-		zoom: 15,
+		zoom: 18,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		mapTypeControl : false,
 		fullscreenControl: false,
@@ -124,14 +131,14 @@ export class LocationPage {
 
 			var trafficLayer = new google.maps.TrafficLayer();
 			trafficLayer.setMap(this.map);
-		
 			resolve();
 		}).then(()=>{
 			let searchInput = document.getElementById("directionFrom");
-			searchInput.setAttribute("placeholder","Search Location");
+			searchInput.setAttribute("placeholder","Your Location");
 			
 			let searchBox = new google.maps.places.Autocomplete(searchInput);			
-
+			searchBox.setComponentRestrictions(
+				{'country': ['in']});
 			searchBox.addListener('place_changed', ()=>{
 				let selectLocation = searchBox.getPlace();
 				//console.log(selectLocation);
@@ -158,9 +165,6 @@ export class LocationPage {
 	}
 	
 	addMarker(latLng){
-		// if (this.currentMarker) {
-		// 	this.currentMarker.setMap(null);
-		// }
 		this.markers.push(new google.maps.Marker({
 			map: this.map,
 			animation: google.maps.Animation.DROP,
@@ -192,11 +196,13 @@ export class LocationPage {
 						options['selectLocation'] = this.selectedLocation;
 					}
 					this.directionStatus = true;
-					let searchInput = document.getElementById("directionFrom");
-					searchInput.setAttribute("placeholder","From");
+					// let searchInput = document.getElementById("directionFrom");
+					// searchInput.setAttribute("placeholder","From");
 					setTimeout(()=>{
 						var searchInputTo = document.getElementById("directionTo");
 						var searchBox = new google.maps.places.Autocomplete(searchInputTo);
+						searchBox.setComponentRestrictions(
+							{'country': ['in']});
 						searchBox.addListener('place_changed', ()=>{
 							let selectLocation = searchBox.getPlace();
 							this.directionFrm.end = {
@@ -233,33 +239,129 @@ export class LocationPage {
 
 		directionsDisplay.setMap(null);
 		directionsDisplay.setMap(this.map);
+		var polylineDotted = {};
+		if(this.directionFrm.type == 'WALKING') {
+			polylineDotted = {
+				strokeColor: colorObj['color'],
+				strokeOpacity: 0,
+				fillOpacity: 0,
+				icons: [
+					{
+						icon: {
+							path: google.maps.SymbolPath.CIRCLE,
+							fillOpacity: 1,
+							scale: 5
+						},
+						offset: '0%',
+						repeat: '15px'
+					}
+				],
+			};
+		} else {
+			polylineDotted = {
+				strokeColor: colorObj['color'],
+				strokeOpacity: 1,
+				fillOpacity: 0,
+				strokeWeight:5
+				
+			};
+		}
 		directionsDisplay.setOptions({
-			suppressMarkers: true,
-			polylineOptions: {
-				strokeColor: colorObj['color']
-			}
+			//suppressMarkers: true,
+			polylineOptions: polylineDotted
 		})
 		this.clearMarkers().then(()=>{
-			this.addMarker(this.directionFrm.start['position']);
-			this.addMarker(this.directionFrm.end['position']);
+			//this.addMarker(this.directionFrm.start['position']);
+			//this.addMarker(this.directionFrm.end['position']);
 		});
+		var directionType = this.directionFrm.type;
 		this.directionsService.route({
-			origin: this.directionFrm.start['address'],
-			destination: this.directionFrm.end['address'],
+			origin: this.directionFrm.start.position.lat+', '+ this.directionFrm.start.position.lng,
+			destination: this.directionFrm.end.position.lat+', '+ this.directionFrm.end.position.lng,
 			travelMode: this.directionFrm.type
-		}, function(response, status) {
+		}, function(response, status)  {
 
 			directionsDisplay.setDirections(response);
-			this.directionDetails = response['routes'];
-			console.log(this.directionDetails);
-			//console.log(JSON.stringify(response));
+			if (response['routes'].length > 0) {
+				let html = '';
+				
+				for(let route of response['routes']) {
+					html += '<div class="direction-details-content">';
+						
+					if (route.legs.length > 0) {
+						for(let leg of route.legs) {
+							html += '<div class="heading-container">';
+							html += '<p class="details-heading">';
+							if (directionType == 'TRANSIT') {
+								html += '<span>'+leg.departure_time.text+'</span> - <span>'+leg.arrival_time.text+'</span>';
+							} else {
+								if (leg.summary != '') {
+									html += '<span> via '+route.summary+'</span>';
+								}
+							}
+							html += '</p>';
+							html += '<p class="details-distence-heading">';
+							html += '<span class="distence">'+leg.distance.text+'</span>';
+							html += '<span class="duration">'+leg.duration.text+'</span>';
+							html += '</p>';
+							html += '<div class="clearfix"></div>';
+							html += '</div>';
+							html += '<p class="details-main-heading"><strong class="start-point">'+ leg.start_address+'</strong></p>';
+
+							//if (directionType != 'TRANSIT') {
+								if (leg.steps.length > 0) {
+									let step ;
+									for(let stepIndex in leg.steps) {
+										step = leg.steps[stepIndex];
+										html += '<div class="details-content '+step.travel_mode+'" >';
+										html += '<div class="step-description">'+step.instructions;
+										if (step.steps != undefined) {
+											html += '<div class="sub-content" data-step="'+stepIndex+'">';
+											for (let subStep of step.steps) {
+												html += '<div class="details-content '+subStep.travel_mode+'">';
+												html += '<div class="step-description">'+subStep.instructions+'</div>';
+												html += '<div class="step-distence">';
+												html += '<span class="distence">'+subStep.distance.text+'</span>';
+												html += '<span class="duration">'+subStep.duration.text+'</span>';
+												html += '</div>';
+												html += '<div class="clearfix"></div>';
+												html += '</div>';
+											}
+											html += '</div>';
+										}
+										html += '</div>';
+										html += '<div class="step-distence">';
+										html += '<span class="distence">'+step.distance.text+'</span>';
+										html += '<span class="duration">'+step.duration.text+'</span>';
+										html += '</div>';
+										html += '<div class="clearfix"></div>';
+										html += '</div>';
+									}
+								}
+							//} else {
+
+							//}
+
+							html += '<p class="details-main-heading"><strong class="end-point">'+ leg.end_address+'</strong></p>';
+							
+						}
+						
+					}
+					html += '</div>';
+				}
+				document.getElementById('directionDetailsContent').innerHTML = (html);
+				
+			}
+			console.log(response);
+			return response;
 			
 		});
+		
 	}
 	showDirectionDetails()
 	{
 		//console.log("before "+ this.directionDetailsStatus);
-		this.directionDetailsStatus = (this.directionDetailsStatus == true)? false:true;
+		this.directionDetailsStatus = (this.directionDetailsStatus == 'hidden')? 'display':'hidden';
 		console.log(this.directionDetails);
 	}
 }

@@ -15,7 +15,7 @@ height: 100%;
     top: 0;
     z-index: 99;
     width: 100%;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.8);
 }
 .place-container input {
     width: 100%;
@@ -24,4 +24,59 @@ height: 100%;
     padding: 5px;
     background: none;
     border-bottom: 1px solid #CCC;
+}
+
+.direction-details-content {
+    padding: 5px 20px;
+    border-top: 1px solid #CCC;
+    margin-top: 10px;
+}
+p.details-heading {
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+    width: 65%;
+}
+p.details-distence-heading {
+    float: right;
+    clear: right;
+    text-align: right;
+}
+span.distence {
+    display: block;
+    color:#e81515;
+    font-weight: bold;
+}
+.details-content {
+    padding: 10px 0;
+    line-height: 25px;
+    
+}
+.sub-content {
+}
+.sub-content .details-content {
+    border-color: #1f57b9 !important;
+    border-width: 7px !important;
+    
+}
+.details-content.WALKING {
+    border-left: 10px dotted #478aff;
+    margin-top: 10px;
+}
+.details-content.DRIVING {
+    border-left: 10px dashed #478aff;
+    margin-top: 5px;
+}
+.details-content.TRANSIT {
+    border-left: 10px dashed #478aff;
+    margin-top: 5px;
+}
+.step-description {
+    float: left;
+    width: 79%;
+    padding-left: 10px;
+}
+.step-distence {
+    float: right;
+    text-align: right;
 }
