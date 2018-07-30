@@ -18,29 +18,42 @@
     <p>
       <input type="text" placeholder="Search Location" id="directionFrom"/>
     </p>
-    <p *ngIf="directionStatus">
-      <input type="text" placeholder="To" id="directionTo"/>
-    </p>
-    
-    <table class="full-table" *ngIf="directionStatus">
-      <tr>
-        <td *ngFor="let type of directionType" class="text-center">
-          <button ion-button (click)="changeDirectionType(type)"   icon-only color="primary" [outline] = "directionFrm.type != type.value">
-              <ion-icon name="car" *ngIf="type.name=='Driving'"></ion-icon>
-              
-              <ion-icon name="walk" *ngIf="type.name=='Walking'"></ion-icon>
-              <ion-icon name="train" *ngIf="type.name=='Transit'"></ion-icon>
-          </button>
-        </td> 
-        <!--  -->
-        <td class="text-center" >
-          <button ion-button icon-only outline (click)="showDirectionDetails()" *ngIf="directionFrm.start.address!='' && directionFrm.end.address!=''">
-              <ion-icon name="share-alt"></ion-icon>
-          </button>
-        </td>
-      </tr>
-    </table>
-    <div class="direction-details-container" id="directionDetailsContent" [ngClass]="directionDetailsStatus"></div>
+    <div *ngIf="directionStatus">
+      <p >
+        <input type="text" placeholder="To" id="directionTo"/>
+      </p>
+      
+      <table class="full-table" >
+        <tr>
+          <td *ngFor="let type of directionType" class="text-center">
+            <button ion-button (click)="changeDirectionType(type)"   icon-only color="primary" [outline] = "directionFrm.type != type.value">
+                <ion-icon name="car" *ngIf="type.name=='Driving'"></ion-icon>
+                
+                <ion-icon name="walk" *ngIf="type.name=='Walking'"></ion-icon>
+                <ion-icon name="train" *ngIf="type.name=='Transit'"></ion-icon>
+            </button>
+          </td> 
+          <!--  -->
+          <td class="text-center" >
+            <button ion-button icon-only outline (click)="showDirectionDetails()" *ngIf="directionFrm.start.address!='' && directionFrm.end.address!=''">
+                <ion-icon name="share-alt"></ion-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+      <div class="direction-details-container" id="directionDetailsContent" [ngClass]="directionDetailsStatus"></div>
+    </div>
+    <div *ngIf="nearByStatus">
+        <input type="text" placeholder="Place Type" id="placeTypeText" (keyup)="autoCompleteList()" [(ngModel)]="placeType"/>
+        <div *ngIf="autoCompletePlaceTypeList.length > 0" class="place-type-container">
+            <span class="place-type" *ngFor="let placeType of autoCompletePlaceTypeList" (click)="selectPlaceType(placeType)">{{ placeType.name }}</span>
+        </div>
+        <div *ngIf="selectedPlaceType.length > 0" class="place-type-container">
+          <strong>Selected Place Type</strong>
+          <span class="place-type" *ngFor="let placeType of selectedPlaceType" (click)="removePlaceType(placeType)">{{ placeType.name }} <ion-icon name="close" ></ion-icon></span>
+      </div>
+      <button ion-button color="primary" (click)="searchNearByPlace()">Search</button>
+    </div>
   </div>
   <div #map id="map"></div> 
 </ion-content>

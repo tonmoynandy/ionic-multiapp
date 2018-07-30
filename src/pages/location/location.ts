@@ -20,6 +20,7 @@ export class LocationPage {
 	  directionsService: any ;
 	  directionsDisplay: any;
 	  directionStatus : boolean = false;
+	  nearByStatus : boolean = false;
 	  directionDetailsStatus  = 'hidden';
 	  directionType = [
 		{
@@ -55,6 +56,308 @@ export class LocationPage {
 		},
 		type : 'DRIVING',
 	  };
+	nearByPlaceType = [
+		{
+			name : 'Airport',
+			value : 'airport'
+		},
+		{
+			name : 'Park',
+			value : 'amusement_park'
+		},
+		{
+			name : 'Art gallery',
+			value : 'art_gallery'
+		},
+		{
+			name : 'ATM',
+			value : 'atm'
+		},
+		{
+			name : 'Bakery',
+			value : 'bakery'
+		},
+		{
+			name : 'Bank',
+			value : 'bank'
+		},
+		{
+			name : 'Bar',
+			value : 'bar'
+		},
+		{
+			name : 'Beauty salon',
+			value : 'beauty_salon'
+		},
+		{
+			name : 'Bicycle store',
+			value : 'bicycle_store'
+		},
+		{
+			name : 'Book store',
+			value : 'book_store'
+		},
+		{
+			name : 'Bowling alley',
+			value : 'bowling_alley'
+		},
+		{
+			name : 'Bus station',
+			value : 'bus_station'
+		},
+		{
+			name : 'Cafe',
+			value : 'cafe'
+		},
+		{
+			name : 'Campground',
+			value : 'campground'
+		},
+		{
+			name : 'Car dealer',
+			value : 'car_dealer'
+		},
+		{
+			name : 'Car rental',
+			value : 'car_rental'
+		},
+		{
+			name : 'Car repair',
+			value : 'car_repair'
+		},
+		{
+			name : 'Car wash',
+			value : 'car_wash'
+		},
+		{
+			name : 'Casino',
+			value : 'casino'
+		},
+		{
+			name : 'Cemetery',
+			value : 'cemetery'
+		},
+		{
+			name : 'Church',
+			value : 'church'
+		},
+		{
+			name : 'Hall',
+			value : 'city_hall'
+		},
+		{
+			name : 'Clothing store',
+			value : 'clothing_store'
+		},
+		{
+			name : 'Dentist',
+			value : 'dentist'
+		},
+		{
+			name : 'Department store',
+			value : 'department_store'
+		},
+		{
+			name : 'Doctor',
+			value : 'doctor'
+		},
+		{
+			name : 'Electrician',
+			value : 'electrician'
+		},
+		{
+			name : 'Electronics store',
+			value : 'electronics_store'
+		},
+		{
+			name : 'Embassy',
+			value : 'embassy'
+		},
+		{
+			name : 'Fire station',
+			value : 'fire_station'
+		},
+		{
+			name : 'Florist',
+			value : 'florist'
+		},
+		{
+			name : 'Funeral home',
+			value : 'funeral_home'
+		},
+		{
+			name : 'Furniture store',
+			value : 'furniture_store'
+		},
+		{
+			name : 'Gas station',
+			value : 'gas_station'
+		},
+		{
+			name : 'Gym',
+			value : 'gym'
+		},
+		{
+			name : 'Hair care',
+			value : 'hair_care'
+		},
+		{
+			name : 'Hardware store',
+			value : 'hardware_store'
+		},
+		{
+			name : 'Hindu temple',
+			value : 'hindu_temple'
+		},
+		{
+			name : 'Home goods store',
+			value : 'home_goods_store'
+		},
+		{
+			name : 'Hospital',
+			value : 'hospital'
+		},
+		{
+			name : 'Insurance agency',
+			value : 'insurance_agency'
+		},
+		{
+			name : 'Jewelry store',
+			value : 'jewelry_store'
+		},
+		{
+			name : 'Laundry',
+			value : 'laundry'
+		},
+		{
+			name : 'Lawyer',
+			value : 'lawyer'
+		},
+		{
+			name : 'Library',
+			value : 'library'
+		},
+		{
+			name : 'Liquor store',
+			value : 'liquor_store'
+		},
+		{
+			name : 'Local government office',
+			value : 'local_government_office'
+		},
+		{
+			name : 'Lodging',
+			value : 'lodging'
+		},
+		{
+			name : 'Meal delivery',
+			value : 'meal_delivery'
+		},
+		{
+			name : 'Mosque',
+			value : 'mosque'
+		},
+		{
+			name : 'Movie theater',
+			value : 'movie_theater'
+		},
+		{
+			name : 'Moving company',
+			value : 'moving_company'
+		},
+		{
+			name : 'Museum',
+			value : 'museum'
+		},
+		{
+			name : 'Night club',
+			value : 'night_club'
+		},
+		{
+			name : 'Painter',
+			value : 'painter'
+		},
+		{
+			name : 'Parking',
+			value : 'parking'
+		},
+		{
+			name : 'Pet store',
+			value : 'pet_store'
+		},
+		{
+			name : 'Pharmacy',
+			value : 'pharmacy'
+		},
+		{
+			name : 'Physiotherapist',
+			value : 'physiotherapist'
+		},
+		{
+			name : 'Plumber',
+			value : 'plumber'
+		},
+		{
+			name : 'Police',
+			value : 'police'
+		},
+		{
+			name : 'Post office',
+			value : 'post_office'
+		},
+		{
+			name : 'Real estate agency',
+			value : 'real_estate_agency'
+		},
+		{
+			name : 'Restaurant',
+			value : 'restaurant'
+		},
+		{
+			name : 'Roofing contractor',
+			value : 'roofing_contractor'
+		},
+		{
+			name : 'School',
+			value : 'school'
+		},
+		{
+			name : 'Shoe store',
+			value : 'shoe_store'
+		},
+		{
+			name : 'Shopping mall',
+			value : 'shopping_mall'
+		},
+		{
+			name : 'Spa',
+			value : 'spa'
+		},
+		{
+			name : 'Stadium',
+			value : 'stadium'
+		},
+		{
+			name : 'Taxi stand',
+			value : 'taxi_stand'
+		},
+		{
+			name : 'Train station',
+			value : 'train_station'
+		},
+		{
+			name : 'Travel agency',
+			value : 'travel_agency'
+		},
+		{
+			name : 'Veterinary care',
+			value : 'veterinary_care'
+		},
+		{
+			name : 'Zoo',
+			value : 'zoo'
+		}
+	]
 	directionDetails : any  = [];
 	locationData : any = {
 		lat : '',
@@ -185,9 +488,69 @@ export class LocationPage {
 			resolve();
 		})
 	}
+	placeType : string = '';
+	autoCompletePlaceTypeList : any = [];
+	selectedPlaceType : any = [];
+	autoCompleteList()
+	{
+		this.autoCompletePlaceTypeList = this.nearByPlaceType.filter((item) => {
+			let index = this.selectedPlaceType.findIndex(selectItem=>{
+				return selectItem.value == item.value;
+			})
+			return item.name.toLowerCase().startsWith(this.placeType.toLowerCase()) && index == -1
+		})
+		
+	}
+	selectPlaceType(placeType)
+	{
+		let index = this.autoCompletePlaceTypeList.findIndex(item=>{
+			return item.value == placeType.value;
+		})
+		this.autoCompletePlaceTypeList.splice(index,1);
+		
+		this.selectedPlaceType.push(placeType);
+	}
+	removePlaceType(placeType) {
+		let index = this.selectedPlaceType.findIndex(item=>{
+			return item.value == placeType.value;
+		})
+		this.selectedPlaceType.splice(index,1);
+	}
+	searchNearByPlace()
+	{
+		let selectedPlaceTypeValues = this.selectedPlaceType.map(function(value,index) {
+			return value["value"];
+		})
+		
+		var service = new google.maps.places.PlacesService(this.map);
+        service.nearbySearch({
+          location: this.directionFrm.start.position,
+          radius: 500,
+          type: selectedPlaceTypeValues
+        }, (result, status)=>{
+			if (status === google.maps.places.PlacesServiceStatus.OK) {
+				console.log(result);
+				if (result.length > 0) {
+					
+					for(let place of result) {
+						new google.maps.Marker({
+							map: this.map,
+							animation: google.maps.Animation.DROP,
+							position: { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() },
+							icon : 'assets/marker.png'
+						})
+					}
+				}
+				
+				
+				
+			}
+		});
+	}
 	addActionSheet()
 	{
 		let buttons = [
+			// direction //
 			{
 				text: 'Direction',
 				handler: () => {
@@ -196,6 +559,7 @@ export class LocationPage {
 						options['selectLocation'] = this.selectedLocation;
 					}
 					this.directionStatus = true;
+					this.nearByStatus = false;
 					// let searchInput = document.getElementById("directionFrom");
 					// searchInput.setAttribute("placeholder","From");
 					setTimeout(()=>{
@@ -217,7 +581,17 @@ export class LocationPage {
 						});
 					},500)
 				}
+			},
+			// end direction //
+			// nearby search //
+			{
+				text : 'Nearby Search',
+				handler : ()=>{
+					this.directionStatus = false;
+					this.nearByStatus = true;
+				}
 			}
+			// end nearby // 
 		];
 
 		const actions =this.actionSheet.create({
