@@ -1,6 +1,7 @@
 import { Component , ViewChild, ElementRef} from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Platform, LoadingController,  ActionSheetController, ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { resolveDefinition } from '@angular/core/src/view/util';
 
 /**
  * Generated class for the LocationPage page.
@@ -363,6 +364,10 @@ export class LocationPage {
 		lat : '',
 		lng : ''
 	}
+	myCurrentLocation : any = {
+		lat : '',
+		lng : ''
+	};
 	markers : any = [];
 	selectedLocation : any ;
 	constructor(public navCtrl: NavController, 
@@ -386,8 +391,8 @@ export class LocationPage {
 				{
 					//console.log(resp);
 					//console.log('Geolocation mocked inserted!');
-					this.locationData.lat = resp['coords']['latitude'];
-					this.locationData.lng = resp['coords']['longitude'];
+					this.locationData.lat = this.myCurrentLocation.lat =  resp['coords']['latitude'];
+					this.locationData.lng = this.myCurrentLocation.lng = resp['coords']['longitude'];
 					this.directionFrm.start = {
 						address : 'Your Location',
 						position : {
@@ -457,9 +462,7 @@ export class LocationPage {
 				};
 
 				this.map.setCenter(new google.maps.LatLng(this.locationData.lat, this.locationData.lng));
-				this.clearMarkers().then(()=>{
-					this.addMarker(this.locationData);
-				});
+				
 				
 			})
 		})
@@ -476,16 +479,23 @@ export class LocationPage {
 		}));
 	}
 	clearMarkers()
-	{	return new Promise((resolve, reject)=>{
+	{	
+		let promises = [];
 		
+		return new Promise((finalResolve, finalReject)=>{
 			if (this.markers.length > 0) {
 				for(let m in this.markers) {
-					let marker  = this.markers[m];
-					marker.setMap(null);
-					this.markers.splice(m,1);
+					promises.push(new Promise((resolve, reject)=>{
+						let marker  = this.markers[m];
+						marker.setMap(null);
+						resolve()
+					}));
 				}
 			}
-			resolve();
+			Promise.all(promises).then(()=>{
+				this.markers = [];
+				finalResolve();
+			})
 		})
 	}
 	placeType : string = '';
@@ -493,12 +503,14 @@ export class LocationPage {
 	selectedPlaceType : any = [];
 	autoCompleteList()
 	{
-		this.autoCompletePlaceTypeList = this.nearByPlaceType.filter((item) => {
-			let index = this.selectedPlaceType.findIndex(selectItem=>{
-				return selectItem.value == item.value;
+		if(this.placeType.length > 1) {
+			this.autoCompletePlaceTypeList = this.nearByPlaceType.filter((item) => {
+				let index = this.selectedPlaceType.findIndex(selectItem=>{
+					return selectItem.value == item.value;
+				})
+				return item.name.toLowerCase().startsWith(this.placeType.toLowerCase()) && index == -1
 			})
-			return item.name.toLowerCase().startsWith(this.placeType.toLowerCase()) && index == -1
-		})
+		}
 		
 	}
 	selectPlaceType(placeType)
@@ -516,36 +528,51 @@ export class LocationPage {
 		})
 		this.selectedPlaceType.splice(index,1);
 	}
+	nearByPlaceList :any = [];
 	searchNearByPlace()
 	{
 		let selectedPlaceTypeValues = this.selectedPlaceType.map(function(value,index) {
 			return value["value"];
 		})
-		
-		var service = new google.maps.places.PlacesService(this.map);
-        service.nearbySearch({
-          location: this.directionFrm.start.position,
-          radius: 500,
-          type: selectedPlaceTypeValues
-        }, (result, status)=>{
-			if (status === google.maps.places.PlacesServiceStatus.OK) {
-				console.log(result);
-				if (result.length > 0) {
+		let loader = this.loadCtrl.create({
+			content : "Please wait"
+		})
+		loader.present();
+		this.clearMarkers().then(()=>{
+			var service = new google.maps.places.PlacesService(this.map);
+			service.nearbySearch({
+			location: this.directionFrm.start.position,
+			radius: 500,
+			type: selectedPlaceTypeValues
+			}, (result, status)=>{
+				if (status === google.maps.places.PlacesServiceStatus.OK) {
+					this.nearByPlaceList = result;
+					if (result.length > 0) {
 					
-					for(let place of result) {
-						new google.maps.Marker({
-							map: this.map,
-							animation: google.maps.Animation.DROP,
-							position: { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() },
-							icon : 'assets/marker.png'
-						})
+						for(let place of result) {
+							this.markers.push(new google.maps.Marker({
+								map: this.map,
+								animation: google.maps.Animation.DROP,
+								position: { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() },
+								icon : 'assets/marker.png'
+							}))
+						}
 					}
+					loader.dismiss();
 				}
-				
-				
-				
-			}
-		});
+			});
+		})
+	}
+	nearbyDetailsStatus : boolean = false;
+	showNearByDetails()
+	{
+		this.nearbyDetailsStatus = (this.nearbyDetailsStatus == true)? false : true;
+	}
+	goToPlace(place)
+	{
+		this.nearbyDetailsStatus = false;
+		this.map.setZoom(20);
+		this.map.setCenter(new google.maps.LatLng( place.geometry.location.lat(), place.geometry.location.lng() ))
 	}
 	addActionSheet()
 	{
@@ -644,10 +671,7 @@ export class LocationPage {
 			//suppressMarkers: true,
 			polylineOptions: polylineDotted
 		})
-		this.clearMarkers().then(()=>{
-			//this.addMarker(this.directionFrm.start['position']);
-			//this.addMarker(this.directionFrm.end['position']);
-		});
+		
 		var directionType = this.directionFrm.type;
 		this.directionsService.route({
 			origin: this.directionFrm.start.position.lat+', '+ this.directionFrm.start.position.lng,

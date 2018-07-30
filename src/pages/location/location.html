@@ -53,6 +53,24 @@
           <span class="place-type" *ngFor="let placeType of selectedPlaceType" (click)="removePlaceType(placeType)">{{ placeType.name }} <ion-icon name="close" ></ion-icon></span>
       </div>
       <button ion-button color="primary" (click)="searchNearByPlace()">Search</button>
+      <button ion-button color="primary" (click)="showNearByDetails()"><span *ngIf="nearbyDetailsStatus">Hide Details</span>
+        <span *ngIf="!nearbyDetailsStatus">Show Details</span></button>
+      <button ion-button color="danger" (click)="nearByStatus=false">Hide</button>
+
+      <div class="near-by-search-details-container" *ngIf="nearbyDetailsStatus">
+        <table class="full-table">
+          <tr *ngFor="let place of nearByPlaceList" (click)="goToPlace(place)">
+            <td>
+              <img [src]="place.icon"/>
+            </td>
+            <td>
+              <span class="place-name">{{ place.name }}</span>
+              <span class="place-address">{{ place.vicinity }}</span>
+              <span class="place-rating"><strong>Rating </strong>{{ place.rating }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
   <div #map id="map"></div> 

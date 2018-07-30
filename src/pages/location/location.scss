@@ -96,3 +96,22 @@ span.distence {
     display: block;
     padding: 7px 0px;
 }
+.near-by-search-details-container {
+    padding: 5px 10px;
+}
+.near-by-search-details-container table td {
+    padding: 5px;
+    border-bottom: 1px solid #CCC;
+}
+
+.near-by-search-details-container table td span.place-name {
+    display: block;
+    font-weight: bold;
+    padding: 10px 0px;
+}
+.near-by-search-details-container table td  span.place-address {
+    font-size: 12px;
+    display: block;
+    line-height: 20px;
+    padding: 0 0 5px 0;
+}
