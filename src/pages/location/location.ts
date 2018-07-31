@@ -1,7 +1,7 @@
 import { Component , ViewChild, ElementRef} from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Platform, LoadingController,  ActionSheetController, ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-
+import {LocationPlaceDetailsPage} from './location-place-details/location-place-details';
 /**
  * Generated class for the LocationPage page.
  *
@@ -557,7 +557,7 @@ export class LocationPage {
 			radius: 500,
 			type: selectedPlaceTypeValues
 			}, (result, status)=>{
-				console.log(result);
+				//console.log(result);
 				if (status === google.maps.places.PlacesServiceStatus.OK) {
 					this.nearByPlaceList = result;
 					if (result.length > 0) {
@@ -612,16 +612,10 @@ export class LocationPage {
 		  this.nearbyDetailsStatus = false;
 	}
 	getPlaceDetails(place) {
-		let placeId  = place.place_id;
-		var service = new google.maps.places.PlacesService(this.map);
-
-        service.getDetails({
-          placeId: placeId
-        }, function(placeDetails, status) {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-			console.log(placeDetails);
-          }
-        });
+		const placeId  = place.place_id;
+		const placeModal =  this.modal.create(LocationPlaceDetailsPage,{placeId:placeId, map : this.map});
+		placeModal.present();
+		/*  */
 	}
 	addActionSheet()
 	{

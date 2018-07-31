@@ -8,7 +8,7 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { LandingPage } from '../pages/landing/landing';
 import { LocationPage } from '../pages/location/location';
-import { LocationDirectionPage } from '../pages/location-direction/location-direction';
+import {LocationPlaceDetailsPage} from '../pages/location/location-place-details/location-place-details';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,7 +26,7 @@ import { Diagnostic } from '@ionic-native/diagnostic';
     ListPage,
     LocationPage,
     LandingPage,
-    LocationDirectionPage
+    LocationPlaceDetailsPage
   ],
   imports: [
     BrowserModule,
@@ -41,7 +41,7 @@ import { Diagnostic } from '@ionic-native/diagnostic';
     ListPage,
     LocationPage,
     LandingPage,
-    LocationDirectionPage
+    LocationPlaceDetailsPage
   ],
   providers: [
     StatusBar,

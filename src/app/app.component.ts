@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LandingPage } from '../pages/landing/landing';
 import { LocationPage } from '../pages/location/location';
 
+
 @Component({
 templateUrl: 'app.html'
 })

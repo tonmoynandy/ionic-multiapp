@@ -15,16 +15,16 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-ion-modal {
-    left: 50%;
-    top: 50%;
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 80%;
-    contain: strict;
-    transform: translate(-50%,-50%);
-}
+// ion-modal {
+//     left: 50%;
+//     top: 50%;
+//     position: absolute;
+//     display: block;
+//     width: 100%;
+//     height: 80%;
+//     contain: strict;
+//     transform: translate(-50%,-50%);
+// }
 .clearfix {
     clear:both;
 }
@@ -39,4 +39,10 @@ ion-modal {
 }
 .hidden {
     display: none;
+}
+ul.rating {
+    padding: 0 !important;
+}
+ul.rating li {
+    padding: 0 !important;
 }

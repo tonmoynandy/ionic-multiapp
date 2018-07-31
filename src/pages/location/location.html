@@ -60,10 +60,15 @@
 
       <div class="near-by-search-details-container" *ngIf="nearbyDetailsStatus">
         <div class="nearby-details" *ngFor="let place of nearByPlaceList">
-          <img *ngIf="place.photos.length > 0" src="{{place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}}" />
+          <img *ngIf="place.photos && place.photos.length > 0" src="{{place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}}" />
+          <span class="place-action">
+              <button ion-button outline color="primary" (click)="getPlaceDetails(place)" class="near-by-details-button">Details</button>
+            <button ion-button outline color="primary" (click)="goToPlace(place)" class="near-by-details-button"> Go to map</button>
+            <button ion-button outline color="primary" (click)="goToDirection(place)" class="near-by-details-button">  Direction</button>
+          </span>
           <span class="place-name">{{ place.name }}</span>
           <span class="place-address"><ion-icon ios="ios-pin" md="md-pin"></ion-icon> {{ place.vicinity }}</span>
-          <p class="place-open">
+          <p class="place-open" *ngIf="place.opening_hours">
             <span class="{{ (place.opening_hours.open_now)? 'open':'close' }}">{{ (place.opening_hours.open_now)? 'Open':'Close' }}</span> now
           </p>
           <span class="place-rating">
@@ -76,11 +81,7 @@
                     nullable="false"
                     > 
             </rating></span>
-            <span class="place-action">
-                <button ion-button outline color="primary" (click)="getPlaceDetails(place)" class="near-by-details-button">Details</button>
-              <button ion-button outline color="primary" (click)="goToPlace(place)" class="near-by-details-button"><ion-icon name="locate"></ion-icon> Go to map</button>
-              <button ion-button outline color="primary" (click)="goToDirection(place)" class="near-by-details-button"> <ion-icon name="navigate"></ion-icon> Direction</button>
-            </span>
+            
         </div>
         
       </div>

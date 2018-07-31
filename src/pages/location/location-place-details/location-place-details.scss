@@ -1,0 +1,86 @@
+span.close-btn {
+    display: block;
+    text-align: right;
+    padding: 10px 10px 0 0;
+    font-weight: bold;
+    font-size: 20px;
+    color: #949494;
+}
+.place-details-container {
+    padding: 10px;
+}
+.place-details-container .place-details-header {
+    text-align: center;
+}
+.place-details-container .place-details-header p.place-name {
+    font-size: 20px;
+}
+.place-rating ul {
+padding: 0;
+}
+.tab-header {
+    text-align: center;
+}
+.tab-header span {
+    display: block;
+    border-bottom: 2px solid #CCC;
+    padding: 7px;
+    border-radius: 0 0 5px 5px;
+}
+.tab-header span.active{
+    border-bottom: 2px solid #1f57b9;
+}
+.tab-body {
+    padding: 10px;
+}
+.tab-body p.place-address {
+    font-size: 14px;
+}
+.place-open-header {
+    padding: 7px;
+    border-bottom: 1px solid #CCC;
+}
+.place-open-header label {
+    display: inline-block;
+    width: 49%;
+    font-weight: bold;
+    font-size: 15px;
+}
+.place-open-header label.place-open{
+    text-align: right;
+}
+.tab-body .place-open span.close {
+    color: #fd1111;
+    font-weight: bold;
+}
+.tab-body .place-open span.open {
+    color: #09862e;
+    font-weight: bold;
+}
+.open-grid-content {
+    padding: 5px;
+    border-bottom: 1px solid #CCC;
+    font-size: 13px;
+}
+.open-grid-content {
+    padding: 10px 0;
+    border-bottom: 1px solid #CCC;
+    font-size: 13px;
+    margin: 0;
+}
+span.review-author {
+    display: block;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+span.review-time {
+    font-size: 12px;
+    color: #808080;
+    text-transform: capitalize;
+}
+.review-rating {
+    display: inline-block;
+}
+.review-sub-container {
+    margin: 15px 0px;
+}
