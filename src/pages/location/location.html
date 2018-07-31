@@ -60,7 +60,7 @@
 
       <div class="near-by-search-details-container" *ngIf="nearbyDetailsStatus">
         <div class="nearby-details" *ngFor="let place of nearByPlaceList">
-          <img-loader useImg *ngIf="place.photos.length > 0" src="{{place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}}" ></img-loader>
+          <img *ngIf="place.photos.length > 0" src="{{place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}}" />
           <span class="place-name">{{ place.name }}</span>
           <span class="place-address"><ion-icon ios="ios-pin" md="md-pin"></ion-icon> {{ place.vicinity }}</span>
           <p class="place-open">
