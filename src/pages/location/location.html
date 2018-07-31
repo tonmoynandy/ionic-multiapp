@@ -7,7 +7,8 @@
     Location
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="addActionSheet()">Action</button>
+      <button ion-button (click)="gotToMyLocation()"><ion-icon ios="ios-locate" md="md-locate"></ion-icon></button>
+      <button ion-button (click)="addActionSheet()"><ion-icon name="more" md="md-more"></ion-icon></button>
     </ion-buttons> 
   </ion-navbar>
 </ion-header>
@@ -52,26 +53,39 @@
           <strong>Selected Place Type</strong>
           <span class="place-type" *ngFor="let placeType of selectedPlaceType" (click)="removePlaceType(placeType)">{{ placeType.name }} <ion-icon name="close" ></ion-icon></span>
       </div>
-      <button ion-button color="primary" (click)="searchNearByPlace()">Search</button>
-      <button ion-button color="primary" (click)="showNearByDetails()"><span *ngIf="nearbyDetailsStatus">Hide Details</span>
+      <button ion-button color="primary" (click)="searchNearByPlace()" [disabled]="selectedPlaceType.length == 0">Search</button>
+      <button ion-button color="primary" *ngIf="nearByPlaceList.length >0" (click)="showNearByDetails()"><span *ngIf="nearbyDetailsStatus">Hide Details</span>
         <span *ngIf="!nearbyDetailsStatus">Show Details</span></button>
       <button ion-button color="danger" (click)="nearByStatus=false">Hide</button>
 
       <div class="near-by-search-details-container" *ngIf="nearbyDetailsStatus">
-        <table class="full-table">
-          <tr *ngFor="let place of nearByPlaceList" (click)="goToPlace(place)">
-            <td>
-              <img [src]="place.icon"/>
-            </td>
-            <td>
-              <span class="place-name">{{ place.name }}</span>
-              <span class="place-address">{{ place.vicinity }}</span>
-              <span class="place-rating"><strong>Rating </strong>{{ place.rating }}</span>
-            </td>
-          </tr>
-        </table>
+        <div class="nearby-details" *ngFor="let place of nearByPlaceList">
+          <img-loader useImg *ngIf="place.photos.length > 0" src="{{place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}}" ></img-loader>
+          <span class="place-name">{{ place.name }}</span>
+          <span class="place-address"><ion-icon ios="ios-pin" md="md-pin"></ion-icon> {{ place.vicinity }}</span>
+          <p class="place-open">
+            <span class="{{ (place.opening_hours.open_now)? 'open':'close' }}">{{ (place.opening_hours.open_now)? 'Open':'Close' }}</span> now
+          </p>
+          <span class="place-rating">
+            <rating *ngIf="place.rating"
+                    readOnly="true"
+                    max="{{place.rating}}"
+                    emptyStarIconName="star-outline"
+                    halfStarIconName="star-half"
+                    starIconName="star" 
+                    nullable="false"
+                    > 
+            </rating></span>
+            <span class="place-action">
+                <button ion-button outline color="primary" (click)="getPlaceDetails(place)" class="near-by-details-button">Details</button>
+              <button ion-button outline color="primary" (click)="goToPlace(place)" class="near-by-details-button"><ion-icon name="locate"></ion-icon> Go to map</button>
+              <button ion-button outline color="primary" (click)="goToDirection(place)" class="near-by-details-button"> <ion-icon name="navigate"></ion-icon> Direction</button>
+            </span>
+        </div>
+        
       </div>
     </div>
   </div>
-  <div #map id="map"></div> 
+  <div #map id="map"></div>
+
 </ion-content>

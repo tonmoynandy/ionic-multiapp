@@ -1,7 +1,6 @@
 import { Component , ViewChild, ElementRef} from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Platform, LoadingController,  ActionSheetController, ModalController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
-import { resolveDefinition } from '@angular/core/src/view/util';
 
 /**
  * Generated class for the LocationPage page.
@@ -360,9 +359,10 @@ export class LocationPage {
 		}
 	]
 	directionDetails : any  = [];
-	locationData : any = {
+	defaultLocation : any = {
 		lat : '',
-		lng : ''
+		lng : '',
+		marker : ''
 	}
 	myCurrentLocation : any = {
 		lat : '',
@@ -391,8 +391,8 @@ export class LocationPage {
 				{
 					//console.log(resp);
 					//console.log('Geolocation mocked inserted!');
-					this.locationData.lat = this.myCurrentLocation.lat =  resp['coords']['latitude'];
-					this.locationData.lng = this.myCurrentLocation.lng = resp['coords']['longitude'];
+					this.defaultLocation.lat = this.myCurrentLocation.lat =  resp['coords']['latitude'];
+					this.defaultLocation.lng = this.myCurrentLocation.lng = resp['coords']['longitude'];
 					this.directionFrm.start = {
 						address : 'Your Location',
 						position : {
@@ -420,7 +420,7 @@ export class LocationPage {
 	
 	loadMap(){
  
-    let latLng = new google.maps.LatLng(this.locationData.lat, this.locationData.lng);
+    let latLng = new google.maps.LatLng(this.defaultLocation.lat, this.defaultLocation.lng);
  
     let mapOptions = {
 		center: latLng,
@@ -451,8 +451,8 @@ export class LocationPage {
 				let selectLocation = searchBox.getPlace();
 				//console.log(selectLocation);
 				this.selectedLocation = selectLocation;
-				this.locationData.lat = selectLocation.geometry.location.lat();
-				this.locationData.lng = selectLocation.geometry.location.lng();
+				this.defaultLocation.lat = selectLocation.geometry.location.lat();
+				this.defaultLocation.lng = selectLocation.geometry.location.lng();
 				this.directionFrm.start = {
 					address : selectLocation.formatted_address,
 					position : {
@@ -461,13 +461,25 @@ export class LocationPage {
 					}
 				};
 
-				this.map.setCenter(new google.maps.LatLng(this.locationData.lat, this.locationData.lng));
-				
+				this.map.setCenter(new google.maps.LatLng(this.defaultLocation.lat, this.defaultLocation.lng));
+				this.addDefaultMarker();		
 				
 			})
 		})
 		
-		this.addMarker(this.locationData);
+		this.addDefaultMarker();
+	}
+	addDefaultMarker()
+	{
+		if (this.defaultLocation.marker) {
+			this.defaultLocation.marker.setMap(null);
+		}
+		this.defaultLocation.marker = new google.maps.Marker({
+			map: this.map,
+			animation: google.maps.Animation.DROP,
+			position: {lat : this.defaultLocation.lat, lng : this.defaultLocation.lng},
+			icon : 'assets/current-marker.gif'
+		});
 	}
 	
 	addMarker(latLng){
@@ -541,10 +553,11 @@ export class LocationPage {
 		this.clearMarkers().then(()=>{
 			var service = new google.maps.places.PlacesService(this.map);
 			service.nearbySearch({
-			location: this.directionFrm.start.position,
+			location: {lat : this.defaultLocation.lat, lng : this.defaultLocation.lng},
 			radius: 500,
 			type: selectedPlaceTypeValues
 			}, (result, status)=>{
+				console.log(result);
 				if (status === google.maps.places.PlacesServiceStatus.OK) {
 					this.nearByPlaceList = result;
 					if (result.length > 0) {
@@ -574,9 +587,46 @@ export class LocationPage {
 		this.map.setZoom(20);
 		this.map.setCenter(new google.maps.LatLng( place.geometry.location.lat(), place.geometry.location.lng() ))
 	}
+	goToDirection(place)
+	{
+		this.directionFrm = {
+			start : {
+				address: 'START LOCATION',
+				position : {
+					lat : this.defaultLocation.lat,
+					lng : this.defaultLocation.lng
+				}
+			},
+			end : {
+				address:'End Location',
+				position : {
+					lat : place.geometry.location.lat(), 
+					lng : place.geometry.location.lng()
+				}
+			},
+			type : 'WALKING',
+		  };
+		  this.directionStatus = true;
+		  this.nearByStatus = false;
+		  this.displayDirection();
+		  this.nearbyDetailsStatus = false;
+	}
+	getPlaceDetails(place) {
+		let placeId  = place.place_id;
+		var service = new google.maps.places.PlacesService(this.map);
+
+        service.getDetails({
+          placeId: placeId
+        }, function(placeDetails, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+			console.log(placeDetails);
+          }
+        });
+	}
 	addActionSheet()
 	{
 		let buttons = [
+
 			// direction //
 			{
 				text: 'Direction',
@@ -610,22 +660,40 @@ export class LocationPage {
 				}
 			},
 			// end direction //
+			
 			// nearby search //
 			{
-				text : 'Nearby Search',
+				text : 'Nearby',
 				handler : ()=>{
 					this.directionStatus = false;
 					this.nearByStatus = true;
+					this.nearbyDetailsStatus =  (this.nearByPlaceList.length > 0)? true:false;
 				}
-			}
+			},
 			// end nearby // 
+			/* GO TO MY LOCATION */
+			{
+				text : 'Go To My Location',
+				handler : ()=>{
+					this.gotToMyLocation()
+				}
+			},
+			/* END GO TO MY LOCATION */
 		];
 
 		const actions =this.actionSheet.create({
-			title : 'Action',
+			title : '',
 			buttons : buttons
 		})
 		actions.present();
+	}
+	gotToMyLocation()
+	{
+		this.map.setCenter(new google.maps.LatLng( this.myCurrentLocation.lat, this.myCurrentLocation.lng ));
+		this.defaultLocation.lat = this.myCurrentLocation.lat;
+		this.defaultLocation.lng = this.myCurrentLocation.lng;
+		this.addDefaultMarker();
+		document.getElementById('directionFrom')['value'] = '';
 	}
 	changeDirectionType(type) {
 		this.directionFrm.type = type['value'];
@@ -691,7 +759,9 @@ export class LocationPage {
 							html += '<div class="heading-container">';
 							html += '<p class="details-heading">';
 							if (directionType == 'TRANSIT') {
-								html += '<span>'+leg.departure_time.text+'</span> - <span>'+leg.arrival_time.text+'</span>';
+								if (leg.departure_time) {
+									html += '<span>'+leg.departure_time.text+'</span> - <span>'+leg.arrival_time.text+'</span>';
+								}
 							} else {
 								if (leg.summary != '') {
 									html += '<span> via '+route.summary+'</span>';
@@ -706,39 +776,35 @@ export class LocationPage {
 							html += '</div>';
 							html += '<p class="details-main-heading"><strong class="start-point">'+ leg.start_address+'</strong></p>';
 
-							//if (directionType != 'TRANSIT') {
-								if (leg.steps.length > 0) {
-									let step ;
-									for(let stepIndex in leg.steps) {
-										step = leg.steps[stepIndex];
-										html += '<div class="details-content '+step.travel_mode+'" >';
-										html += '<div class="step-description">'+step.instructions;
-										if (step.steps != undefined) {
-											html += '<div class="sub-content" data-step="'+stepIndex+'">';
-											for (let subStep of step.steps) {
-												html += '<div class="details-content '+subStep.travel_mode+'">';
-												html += '<div class="step-description">'+subStep.instructions+'</div>';
-												html += '<div class="step-distence">';
-												html += '<span class="distence">'+subStep.distance.text+'</span>';
-												html += '<span class="duration">'+subStep.duration.text+'</span>';
-												html += '</div>';
-												html += '<div class="clearfix"></div>';
-												html += '</div>';
-											}
+							if (leg.steps.length > 0) {
+								let step ;
+								for(let stepIndex in leg.steps) {
+									step = leg.steps[stepIndex];
+									html += '<div class="details-content '+step.travel_mode+'" >';
+									html += '<div class="step-description">'+step.instructions;
+									if (step.steps != undefined) {
+										html += '<div class="sub-content" data-step="'+stepIndex+'">';
+										for (let subStep of step.steps) {
+											html += '<div class="details-content '+subStep.travel_mode+'">';
+											html += '<div class="step-description">'+subStep.instructions+'</div>';
+											html += '<div class="step-distence">';
+											html += '<span class="distence">'+subStep.distance.text+'</span>';
+											html += '<span class="duration">'+subStep.duration.text+'</span>';
+											html += '</div>';
+											html += '<div class="clearfix"></div>';
 											html += '</div>';
 										}
 										html += '</div>';
-										html += '<div class="step-distence">';
-										html += '<span class="distence">'+step.distance.text+'</span>';
-										html += '<span class="duration">'+step.duration.text+'</span>';
-										html += '</div>';
-										html += '<div class="clearfix"></div>';
-										html += '</div>';
 									}
+									html += '</div>';
+									html += '<div class="step-distence">';
+									html += '<span class="distence">'+step.distance.text+'</span>';
+									html += '<span class="duration">'+step.duration.text+'</span>';
+									html += '</div>';
+									html += '<div class="clearfix"></div>';
+									html += '</div>';
 								}
-							//} else {
-
-							//}
+							}
 
 							html += '<p class="details-main-heading"><strong class="end-point">'+ leg.end_address+'</strong></p>';
 							
@@ -750,7 +816,7 @@ export class LocationPage {
 				document.getElementById('directionDetailsContent').innerHTML = (html);
 				
 			}
-			console.log(response);
+			//console.log(response);
 			return response;
 			
 		});
@@ -760,6 +826,6 @@ export class LocationPage {
 	{
 		//console.log("before "+ this.directionDetailsStatus);
 		this.directionDetailsStatus = (this.directionDetailsStatus == 'hidden')? 'display':'hidden';
-		console.log(this.directionDetails);
+		//console.log(this.directionDetails);
 	}
 }

@@ -99,19 +99,48 @@ span.distence {
 .near-by-search-details-container {
     padding: 5px 10px;
 }
-.near-by-search-details-container table td {
-    padding: 5px;
-    border-bottom: 1px solid #CCC;
-}
 
-.near-by-search-details-container table td span.place-name {
+.near-by-search-details-container .nearby-details {
+    margin: 10px 0;
+}
+.near-by-search-details-container .nearby-details span.place-name {
     display: block;
     font-weight: bold;
     padding: 10px 0px;
 }
-.near-by-search-details-container table td  span.place-address {
+.near-by-search-details-container .nearby-details  span.place-address {
     font-size: 12px;
     display: block;
     line-height: 20px;
     padding: 0 0 5px 0;
+}
+.near-by-search-details-container .nearby-details .place-open {
+    padding: 0;
+    margin: 0;
+}
+.near-by-search-details-container .nearby-details .place-open span.close {
+    color: #fd1111;
+    font-weight: bold;
+}
+.near-by-search-details-container .nearby-details .place-open span.open {
+    color: #09862e;
+    font-weight: bold;
+}
+.near-by-search-details-container .nearby-details  span.place-rating {
+    display: inline-block;
+    width: 42%;
+}
+.near-by-search-details-container .nearby-details  span.place-rating ul {
+ padding: 0;
+}
+.near-by-search-details-container button.near-by-details-button {
+    padding: 4px;
+    font-size: 12px;
+    height: auto;
+    width: 85px;
+}
+.near-by-search-details-container span.place-action {
+    display: inline-block;
+    width: 56%;
+    text-align: right
 }

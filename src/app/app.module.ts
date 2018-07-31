@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-
+import { Ionic2RatingModule } from 'ionic2-rating';
+import { IonicImageLoader } from 'ionic-image-loader';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
@@ -30,6 +31,8 @@ import { Diagnostic } from '@ionic-native/diagnostic';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicImageLoader.forRoot(),
+    Ionic2RatingModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
