@@ -17,7 +17,7 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
 export class PhotogalleryPage {
 
   photoList : string = '';
-  
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     private photoLibrary: PhotoLibrary,
@@ -28,6 +28,8 @@ export class PhotogalleryPage {
         this.photoLibrary.getLibrary().subscribe({
           next: library => {
             this.photoList = JSON.stringify(library);
+            
+            
             library.forEach(function(libraryItem) {
               console.log(libraryItem.id);          // ID of the photo
               console.log(libraryItem.photoURL);    // Cross-platform access to photo
