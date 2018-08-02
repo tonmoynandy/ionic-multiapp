@@ -9,6 +9,7 @@ import { ListPage } from '../pages/list/list';
 import { LandingPage } from '../pages/landing/landing';
 import { LocationPage } from '../pages/location/location';
 import {LocationPlaceDetailsPage} from '../pages/location/location-place-details/location-place-details';
+import { PhotogalleryPage } from '../pages/photogallery/photogallery';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -18,6 +19,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Geolocation } from '@ionic-native/geolocation';
 //import { GeolocationMock } from '@ionic-native-mocks/geolocation';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import { PhotoLibrary } from '@ionic-native/photo-library';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { Diagnostic } from '@ionic-native/diagnostic';
     ListPage,
     LocationPage,
     LandingPage,
-    LocationPlaceDetailsPage
+    LocationPlaceDetailsPage,
+    PhotogalleryPage
   ],
   imports: [
     BrowserModule,
@@ -41,13 +44,15 @@ import { Diagnostic } from '@ionic-native/diagnostic';
     ListPage,
     LocationPage,
     LandingPage,
-    LocationPlaceDetailsPage
+    LocationPlaceDetailsPage,
+    PhotogalleryPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Geolocation,
    // {provide: Geolocation, useClass: GeolocationMock},
+    PhotoLibrary,
     Diagnostic,
     //AndroidPermissions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
