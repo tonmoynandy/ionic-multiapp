@@ -29,7 +29,6 @@ export class PhotogalleryPage {
           next: library => {
             this.photoList = JSON.stringify(library);
             
-            
             library.forEach(function(libraryItem) {
               console.log(libraryItem.id);          // ID of the photo
               console.log(libraryItem.photoURL);    // Cross-platform access to photo
