@@ -67,7 +67,10 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-android-permissions": {},
       "cordova.plugins.diagnostic": {},
-      "cordova-plugin-file": {}
+      "cordova-plugin-file": {},
+      "cordova-plugin-photo-library": {
+        "PHOTO_LIBRARY_USAGE_DESCRIPTION": "My Photogallery"
+      }
     },
     "platforms": [
       "android",
