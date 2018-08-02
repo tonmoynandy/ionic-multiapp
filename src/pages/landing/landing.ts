@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
-
+import { LocationPage } from '../location/location';
 /**
  * Generated class for the LandingPage page.
  *
@@ -28,6 +28,14 @@ export class LandingPage {
     // 	content : 'Synchronizing ...'
     // });
    // loader.present();
+  }
+
+  gotToPage(pageName) {
+    switch(pageName) {
+      case 'map' :
+        this.navCtrl.push(LocationPage);
+      break;
+    }
   }
 
 }

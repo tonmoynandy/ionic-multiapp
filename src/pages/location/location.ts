@@ -541,6 +541,7 @@ export class LocationPage {
 		this.selectedPlaceType.splice(index,1);
 	}
 	nearByPlaceList :any = [];
+	rate : any = 4.5;
 	searchNearByPlace()
 	{
 		let selectedPlaceTypeValues = this.selectedPlaceType.map(function(value,index) {

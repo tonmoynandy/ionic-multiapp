@@ -23,7 +23,8 @@
         <p class="place-rating">
           <rating *ngIf="place.rating"
                   readOnly="true"
-                  max="{{place.rating}}"
+                  max="5"
+                  [(ngModel)] ="place.rating"
                   emptyStarIconName="star-outline"
                   halfStarIconName="star-half"
                   starIconName="star" 
@@ -76,7 +77,8 @@
                           <div class="review-rating">
                               <rating *ngIf="review.rating"
                                     readOnly="true"
-                                    max="{{review.rating}}"
+                                    max="5"
+                                    [(ngModel)]="review.rating"
                                     emptyStarIconName="star-outline"
                                     halfStarIconName="star-half"
                                     starIconName="star" 

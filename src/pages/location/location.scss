@@ -102,6 +102,10 @@ span.distence {
 
 .near-by-search-details-container .nearby-details {
     margin: 10px 0 20px 0;
+    box-shadow: 0 1px 3px #CCC;
+}
+.near-by-search-details-container .nearby-details .place-details {
+    padding: 5px;
 }
 .near-by-search-details-container .nearby-details span.place-name {
     display: block;
@@ -140,4 +144,20 @@ span.distence {
 }
 .near-by-search-details-container span.place-action {
     display: block;
+}
+.near-by-search-details-container span.place-action .fab {
+    width: 30px;
+    height: 30px;
+}
+.near-by-search-details-container span.place-action ion-fab[right] {
+    right: 15px;
+}
+.near-by-search-details-container span.place-action ion-fab-list[side=left] { 
+    margin: 0 27px;
+}
+.near-by-search-details-container span.place-action ion-fab-list{
+    min-height: 28px;
+}
+.fab-close-icon {
+    line-height: 33px;
 }

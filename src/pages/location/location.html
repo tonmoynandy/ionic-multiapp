@@ -61,27 +61,35 @@
       <div class="near-by-search-details-container" *ngIf="nearbyDetailsStatus">
         <div class="nearby-details" *ngFor="let place of nearByPlaceList">
           <img *ngIf="place.photos && place.photos.length > 0" src="{{place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}}" />
-          <span class="place-action">
-              <button ion-button outline color="primary" (click)="getPlaceDetails(place)" class="near-by-details-button">Details</button>
-            <button ion-button outline color="primary" (click)="goToPlace(place)" class="near-by-details-button"> Go to map</button>
-            <button ion-button outline color="primary" (click)="goToDirection(place)" class="near-by-details-button">  Direction</button>
-          </span>
-          <span class="place-name">{{ place.name }}</span>
-          <span class="place-address"><ion-icon ios="ios-pin" md="md-pin"></ion-icon> {{ place.vicinity }}</span>
-          <p class="place-open" *ngIf="place.opening_hours">
-            <span class="{{ (place.opening_hours.open_now)? 'open':'close' }}">{{ (place.opening_hours.open_now)? 'Open':'Close' }}</span> now
-          </p>
-          <span class="place-rating">
-            <rating *ngIf="place.rating"
-                    readOnly="true"
-                    max="{{place.rating}}"
-                    emptyStarIconName="star-outline"
-                    halfStarIconName="star-half"
-                    starIconName="star" 
-                    nullable="false"
-                    > 
-            </rating></span>
-            
+          <div class="place-details">
+            <span class="place-action">
+                <ion-fab right >
+                    <button ion-fab color="light" color="primary"><ion-icon name="arrow-dropleft"></ion-icon></button>
+                    <ion-fab-list side="left">
+                      <button ion-fab (click)="getPlaceDetails(place)" color="primary"><ion-icon name="share-alt"></ion-icon></button>
+                      <button ion-fab (click)="goToPlace(place)" color="danger"><ion-icon name="pin"></ion-icon></button>
+                      <button ion-fab (click)="goToDirection(place)" color="dark"><ion-icon name="navigate"></ion-icon></button>
+                    </ion-fab-list>
+                  </ion-fab>
+              </span>
+            <span class="place-name">{{ place.name }}</span>
+            <span class="place-address"><ion-icon ios="ios-pin" md="md-pin"></ion-icon> {{ place.vicinity }}</span>
+            <p class="place-open" *ngIf="place.opening_hours">
+              <span class="{{ (place.opening_hours.open_now)? 'open':'close' }}">{{ (place.opening_hours.open_now)? 'Open':'Close' }}</span> now
+            </p>
+            <span class="place-rating">
+                <!-- {{place.rating}} -->
+              <rating *ngIf="place.rating"
+                      [(ngModel)]="place.rating" 
+                      readOnly="true"
+                      max="5"
+                      emptyStarIconName="star-outline"
+                      halfStarIconName="star-half"
+                      starIconName="star" 
+                      nullable="false"
+                      > 
+              </rating></span>
+          </div>
         </div>
         
       </div>
