@@ -47,7 +47,10 @@ export class PhotogalleryPage {
           complete: () => { console.log('done getting photos'); }
         });
       })
-      .catch(err => this.photoList = ('permissions weren\'t granted'));
+      .catch(err => {
+       // this.photoList = ('permissions weren\'t granted')
+       this.photoList = JSON.stringify(err);
+      });
     })
   }
   
