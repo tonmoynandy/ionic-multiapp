@@ -11,8 +11,8 @@ import { Injectable } from '@angular/core';
 export class WeatherProvider {
   httpOptions = {};
   APPLICATION_NAME =  'weather-api';
-	//API_URL = 'https://apibinssoft.herokuapp.com';
-	API_URL = 'http://localhost:8080';
+	API_URL = 'https://apibinssoft.herokuapp.com';
+	//API_URL = 'http://localhost:8080';
   constructor(public http: HttpClient) {
     this.httpOptions = {
      headers: new HttpHeaders({
