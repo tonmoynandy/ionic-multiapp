@@ -5,16 +5,17 @@ page-landing .menu {
     display: inline-block;
     width: 48%;
     padding: 10px;
+    min-height: 130px;
     text-align: center;
     margin: 4px 2px;
     box-shadow: 0 1px 3px #CCC;
 }
 page-landing .menu .menu-icon {
-    font-size: 30px;
+    font-size: 60px;
     color: #1076e6;
 }
 page-landing .menu .menu-text {
-    font-size: 12px;
+    font-size: 20px;
     color: #5a5a5a;
     font-weight: bold;
 }
