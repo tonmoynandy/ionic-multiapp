@@ -11,6 +11,15 @@
 </ion-header>
 
 
-<ion-content padding>
-{{photoList}}
+<ion-content >
+  <div class="album-list-container">
+    <div class="photo" *ngFor="let photo of photoList">
+      <div>
+        <img [src]= "getImageUrl(photo.thumbnailURL)" width="200" />
+        <p><strong>Url : </strong> {{getImageUrl(photo.thumbnailURL)}}</p>
+        <p ><strong>{{ getAlbumName(photo.albumIds[0]).name }}</strong></p>
+        <p style="font-size: 12px;"><strong>Date : </strong> {{photo.creationDate}}</p>
+      </div>
+    </div>
+  </div>
 </ion-content>

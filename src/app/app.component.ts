@@ -5,8 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LandingPage } from '../pages/landing/landing';
 import { LocationPage } from '../pages/location/location';
-import { PhotogalleryPage } from '../pages/photogallery/photogallery';
-
+//import { PhotogalleryPage } from '../pages/photogallery/photogallery';
+import {WeatherPage} from '../pages/weather/weather';
 @Component({
 templateUrl: 'app.html'
 })
@@ -24,7 +24,8 @@ export class MyApp {
     this.pages = [
       { title: 'Home', component: LandingPage },
       { title : 'My Map', component: LocationPage},
-      { title : 'My Gallery', component: PhotogalleryPage}
+      { title : 'My Weather', component : WeatherPage}
+      //{ title : 'My Gallery', component: PhotogalleryPage}
     ];
 
   }

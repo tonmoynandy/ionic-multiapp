@@ -1,0 +1,86 @@
+.weather-header {
+    text-align: center;
+    color: #FFF;
+    padding: 38px;
+}
+.weather-main-container{
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4f85bb+0,4f85bb+100;Blue+3D+%239 */
+background: #4f85bb; /* Old browsers */
+background: -moz-linear-gradient(45deg, #4f85bb 0%, #4f85bb 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(45deg, #4f85bb 0%,#4f85bb 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(45deg, #4f85bb 0%,#4f85bb 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f85bb', endColorstr='#4f85bb',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */}
+.weather-temp h1 {
+    font-size: 50px;
+    padding: 0;
+    margin: 0;
+}
+.weather-desc  .desc {
+    display: block;
+    text-transform: capitalize;
+}
+.weather-details span.details-heading {
+    font-weight: bold;
+    display: inline-block;
+    width: 40%;
+    line-height:30px;
+}
+.loader-box {
+    height: 300px;
+    background: url('/assets/weather/loader-1.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: -23px -7px;
+}
+
+.current-weather-container ion-item{
+    background: none;
+}
+.tab .tab-header ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.tab .tab-header ul li {
+    display: inline-block;
+    width: 49%;
+    text-align: center;
+    padding: 10px 5px;
+    color: #FFF;
+    background: rgba(22, 73, 113, 0.5);
+}
+.tab .tab-header ul li.active { 
+    font-weight: bold;
+    border-bottom: 2px solid #FFF;
+    background: rgba(22, 73, 113, 0.5);
+}
+.forcast-content span.date {
+    font-size: 13px;
+    display:block;
+    line-height: 20px;
+}
+.forcast-content span.wind {
+    font-size: 13px;
+    display: block;
+    line-height: 20px;
+}
+.forcast-content .left-content {
+    float: left;
+    width:43%;
+    text-align: center;
+    color: #FFF;
+}
+.forcast-content .left-content .desc{
+    display: block;
+    text-transform: capitalize;
+}
+.forcast-content .right-content {
+    float: right;
+}
+.forcast-content .right-content ion-item{
+    font-size: 13px;
+}
+.forcast-content .right-content ion-item .details-heading {
+    display: inline-block;
+    width: 43%;
+}

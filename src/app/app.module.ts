@@ -10,16 +10,19 @@ import { LandingPage } from '../pages/landing/landing';
 import { LocationPage } from '../pages/location/location';
 import {LocationPlaceDetailsPage} from '../pages/location/location-place-details/location-place-details';
 import { PhotogalleryPage } from '../pages/photogallery/photogallery';
+import { WeatherPage } from '../pages/weather/weather';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
+import {TempchangePipe} from '../pipes/tempchange/tempchange';
+import {WinddirectionPipe} from '../pipes/winddirection/winddirection';
 //import { AndroidPermissions } from '@ionic-native/android-permissions';
 //import { AndroidPermissionsMock } from '@ionic-native-mocks/android-permissions';
 import { Geolocation } from '@ionic-native/geolocation';
 //import { GeolocationMock } from '@ionic-native-mocks/geolocation';
 import { Diagnostic } from '@ionic-native/diagnostic';
 import { PhotoLibrary } from '@ionic-native/photo-library';
+import { WeatherProvider } from '../providers/weather/weather';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,10 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
     LocationPage,
     LandingPage,
     LocationPlaceDetailsPage,
-    PhotogalleryPage
+    WeatherPage,
+    PhotogalleryPage,
+    TempchangePipe,
+    WinddirectionPipe
   ],
   imports: [
     BrowserModule,
@@ -45,6 +51,7 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
     LocationPage,
     LandingPage,
     LocationPlaceDetailsPage,
+    WeatherPage,
     PhotogalleryPage
   ],
   providers: [
@@ -55,7 +62,8 @@ import { PhotoLibrary } from '@ionic-native/photo-library';
     PhotoLibrary,
     Diagnostic,
     //AndroidPermissions,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    WeatherProvider
   ]
 })
 export class AppModule {}

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { LocationPage } from '../location/location';
+import { WeatherPage } from '../weather/weather';
 /**
  * Generated class for the LandingPage page.
  *
@@ -34,6 +35,9 @@ export class LandingPage {
     switch(pageName) {
       case 'map' :
         this.navCtrl.push(LocationPage);
+      break;
+      case 'weather' :
+        this.navCtrl.push(WeatherPage);
       break;
     }
   }

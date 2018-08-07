@@ -1,0 +1,105 @@
+
+
+
+<ion-content>
+<div class="weather-main-container">
+<ion-refresher (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
+<!-- <div class="loader-box" *ngIf="loader"></div> -->
+<div class="current-weather-container"  *ngIf="!loader">
+  <div class="weather-header">
+    <div class="weather-temp">
+      <h1>{{ weatherData.main.temp }}<span>&deg;</span><span class="type">{{ type }}</span></h1>
+    </div>
+    <div class="weather-desc">
+      <div *ngIf="weatherData.weather.length > 0">
+        <img src="http://openweathermap.org/img/w/{{ weatherData.weather[0].icon }}.png" />
+        <span class="desc">{{ weatherData.weather[0].description }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="weather-details">
+    <div class="tab">
+      <div class="tab-header">
+        <ul>
+          <li (click)="tabContent='overview'" class="{{(tabContent=='overview')?'active':''}}">Overview</li>
+          <li  (click)="gotToForcust()" class="{{(tabContent=='forcust')?'active':''}}">Forecust</li>
+        </ul>
+      </div>
+      <div class="tab-container">
+          <div class="tab-content" *ngIf="tabContent=='overview'">
+              <ion-list>
+                  <ion-item>
+                    <span class="details-heading">Humidity</span>
+                    <span class="details-content">{{ weatherData.main.humidity }}%</span>
+                  </ion-item>
+                  <ion-item>
+                      <span class="details-heading">Pressure</span>
+                      <span class="details-content">{{ weatherData.main.pressure }} hPa</span>
+                  </ion-item>
+                  <ion-item>
+                      <span class="details-heading">Wind</span>
+                      <span class="details-content">{{ weatherData.wind.speed }} meter/sec  from {{ weatherData.wind.dist }}</span>
+                  </ion-item>
+                  <ion-item>
+                      <span class="details-heading">Cloud</span>
+                      <span class="details-content">{{ weatherData.clouds.all }}%</span>
+                  </ion-item>
+                  <ion-item>
+                      <span class="details-heading">Visibility</span>
+                      <span class="details-content">{{ weatherData.visibility }} meter </span>
+                  </ion-item>
+                  <ion-item>
+                      <span class="details-heading">Sunrise</span>
+                      <span class="details-content">{{ weatherData.sys.sunrise }}</span>
+                  </ion-item>
+                  <ion-item>
+                      <span class="details-heading">Sunset</span>
+                      <span class="details-content">{{ weatherData.sys.sunset }}</span>
+                  </ion-item>
+                </ion-list>
+          </div>
+          <div class="tab-content forcast-content" *ngIf="tabContent=='forcust'">
+            <ion-list>
+              <ion-item *ngFor="let w of weatherForcast.list">
+                <div class="left-content">
+                  
+                  <div *ngIf="w.weather.length > 0">
+                    <img src="http://openweathermap.org/img/w/{{ w.weather[0].icon }}.png" />
+                    <h1>{{ w.main.temp | tempchange:type }}<span>&deg;</span><span class="type">{{ type }}</span></h1>
+                    <span class="desc">{{ w.weather[0].description }}</span>
+                    <span class="wind" *ngIf="w.wind">{{ w.wind.speed  }} meter/sec from {{ w.wind.deg | winddirection }}</span>
+                    <span class="date">{{ w.dt_txt | date:'EEE, MMM d' }}</span>
+                    <span class="date">{{ w.dt_txt | date:'hh:mm a' }}</span>
+                    
+                  </div>
+                </div>
+                <div class="right-content">
+                    <ion-list>
+                        <ion-item>
+                          <span class="details-heading">Humidity</span>
+                          <span class="details-content">{{ w.main.humidity }}%</span>
+                        </ion-item>
+                        <ion-item>
+                            <span class="details-heading">Pressure</span>
+                            <span class="details-content">{{ w.main.pressure }} hPa</span>
+                        </ion-item>
+                        <ion-item>
+                            <span class="details-heading">Cloud</span>
+                            <span class="details-content">{{ w.clouds.all }}%</span>
+                        </ion-item>
+                        
+                        
+                      </ion-list>
+                </div>
+              </ion-item>
+            </ion-list>
+          </div>
+      </div>
+    </div>
+     
+  </div>
+</div>
+</div>
+</ion-content>
