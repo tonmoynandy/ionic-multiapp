@@ -10,6 +10,21 @@ background: -moz-linear-gradient(45deg, #4f85bb 0%, #4f85bb 100%); /* FF3.6-15 *
 background: -webkit-linear-gradient(45deg, #4f85bb 0%,#4f85bb 100%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(45deg, #4f85bb 0%,#4f85bb 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f85bb', endColorstr='#4f85bb',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */}
+
+input#toolbar-textbox {
+    border: none;
+    border-bottom: 1px solid #CCC;
+    background: no-repeat;
+    padding: 4px;
+}
+ion-fab.ion-fav-location-btn {
+    position: fixed;
+}
+.weather-header .location-name {
+    font-weight: bold;
+    font-size: 15px;
+    padding-bottom: 10px;
+}
 .weather-temp h1 {
     font-size: 50px;
     padding: 0;

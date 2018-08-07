@@ -1,14 +1,34 @@
-
-
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+    Weather
+    </ion-title>
+    <ion-buttons end>
+      <input type="text" id="toolbar-textbox" *ngIf="locationTextStatus" placeholder="Search Location" />
+      <button ion-button (click)="toggleLocationText()"><ion-icon name="search" md="md-search"></ion-icon></button>
+    </ion-buttons> 
+  </ion-navbar>
+</ion-header>
 
 <ion-content>
-<div class="weather-main-container">
 <ion-refresher (ionRefresh)="doRefresh($event)">
   <ion-refresher-content></ion-refresher-content>
 </ion-refresher>
+
+<div class="weather-main-container">
+
 <!-- <div class="loader-box" *ngIf="loader"></div> -->
 <div class="current-weather-container"  *ngIf="!loader">
+    <ion-fab bottom right class="ion-fav-location-btn">
+      <button ion-fab (click)="getCurrentLocationWeather()"><ion-icon ios="ios-locate" md="md-locate"></ion-icon></button>
+    </ion-fab>
   <div class="weather-header">
+    <div class="location-name">
+      {{currentLocation.address}}
+    </div>
     <div class="weather-temp">
       <h1>{{ weatherData.main.temp }}<span>&deg;</span><span class="type">{{ type }}</span></h1>
     </div>
@@ -46,17 +66,17 @@
                       <span class="details-heading">Cloud</span>
                       <span class="details-content">{{ weatherData.clouds.all }}%</span>
                   </ion-item>
-                  <ion-item>
+                  <ion-item *ngIf="weatherData.visibility">
                       <span class="details-heading">Visibility</span>
                       <span class="details-content">{{ weatherData.visibility }} meter </span>
                   </ion-item>
                   <ion-item>
                       <span class="details-heading">Sunrise</span>
-                      <span class="details-content">{{ weatherData.sys.sunrise }}</span>
+                      <span class="details-content">{{ weatherData.sys.sunrise* 1000 | date:'hh:mm a' }}</span>
                   </ion-item>
                   <ion-item>
                       <span class="details-heading">Sunset</span>
-                      <span class="details-content">{{ weatherData.sys.sunset }}</span>
+                      <span class="details-content">{{ weatherData.sys.sunset* 1000 | date:'hh:mm a' }}</span>
                   </ion-item>
                 </ion-list>
           </div>

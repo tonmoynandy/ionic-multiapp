@@ -34,4 +34,9 @@ export class WeatherProvider {
     return this.http.post(this.API_URL+'/'+this.APPLICATION_NAME+'/forcast', JSON.stringify(latLng), this.httpOptions);
   }
 
+  getLocationFromLatLng(latlng) {
+    let position = latlng.lat+','+latlng.lng;
+    return this.http.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+position+"&sensor=true");
+  }
+
 }
