@@ -85,8 +85,8 @@ export class WeatherPage implements OnInit {
          };
         let searchBox = new google.maps.places.Autocomplete(searchInput,options);
         searchBox.addListener('place_changed', ()=>{
-          let selectLocation = searchBox.getPlace();
-          if (selectLocation.id != undefined){
+          var selectLocation = searchBox.getPlace();
+          if (selectLocation.id){
             this.currentLocation.lat = selectLocation.geometry.location.lat();
             this.currentLocation.lng = selectLocation.geometry.location.lng();
             this.currentLocation.address = selectLocation.name;
