@@ -46,6 +46,7 @@ export class WeatherPage implements OnInit {
     list : []
 
   };
+  
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -54,10 +55,8 @@ export class WeatherPage implements OnInit {
     public weather :WeatherProvider,
     public loaderctrl : LoadingController,
     public myElement: ElementRef,
-    public alertCtrl : AlertController
-  ) {
-    this.getCurrentLocationWeather();
-  }
+    public alertCtrl : AlertController,
+  ) { }
   ngOnInit() {
     this.ionScroll = this.myElement.nativeElement.children[1].children[1]; // div class = 'scroll-content'
   }
@@ -72,7 +71,7 @@ export class WeatherPage implements OnInit {
     }, 15);
   }
   ionViewDidLoad() {
-    
+    this.getCurrentLocationWeather();
   }
   toggleLocationText()
   {
@@ -93,10 +92,18 @@ export class WeatherPage implements OnInit {
             this.currentLocation.address = selectLocation.name;
     
             var loadingContent = this.loaderctrl.create({
-              content: 'Please wait, Weaher forcast is reloading ...',
+              content: 'Please wait, Weaher  is reloading ...',
             })
             loadingContent.present();
-            this.getWeather().then(()=>{
+            this.getWeather().then((responseData)=>{
+            this.weather.putCacheWeatherSearchPlace(
+              {
+                place: {
+                  lat : this.currentLocation.lat,
+                  lng : this.currentLocation.lng,
+                  address : this.currentLocation.address
+                }, weather : responseData});
+
               loadingContent.dismiss();
             });
           } else {
@@ -114,31 +121,42 @@ export class WeatherPage implements OnInit {
   
   getCurrentLocationWeather()
   {
+    
+    const currentCacheWeather = this.weather.getCacheWeatherCurrent();
+    
     this.locationTextStatus = false;
     this.tabContent ='overview';
     var loadingContent = this.loaderctrl.create({
       content: 'Please wait, Weather is fatching...',
     })
     loadingContent.present();
-    this.geoLoc.getCurrentPosition()
-    .then((resp : any) =>
-    {
-      this.currentLocation.address = '';
-      this.currentLocation.lat = resp['coords']['latitude'];
-      this.currentLocation.lng = resp['coords']['longitude'];
-      this.weather.getLocationFromLatLng(this.currentLocation).subscribe((responseData)=>{
-        if (responseData['status'] == 'OK') {
-          //console.log(responseData);
-          this.currentLocation.address = responseData['results'][0]['formatted_address'];
-          this.getWeather().then(()=>{
-            loadingContent.dismiss();
-            this.scrollToTop(1000);
-          });
-        }
+    this.weather.setCurrentUserLocation().then((location)=>{
+      this.currentLocation = location;
+      this.getWeather().then((responseWeatherData)=>{
+        loadingContent.dismiss();
+        let cacheData = this.weather.putCacheWeatherCurrent(
+          {
+            place: location, 
+            weather : responseWeatherData});
+        this.scrollToTop(1000);
       });
-      //console.log(resp['coords']);
-      
     })
+    if (currentCacheWeather == undefined) {
+      this.geoLoc.getCurrentPosition()
+      .then((resp : any) =>
+      {
+        
+        //console.log(resp['coords']);
+        
+      })
+    } else {
+      this.weatherData = currentCacheWeather.weather;
+      this.currentLocation.address = currentCacheWeather.place.address; 
+      //console.log(this.weatherData);
+      this.loader = false;
+      loadingContent.dismiss();
+    }
+    
   }
   getWeather()
   {
@@ -155,7 +173,7 @@ export class WeatherPage implements OnInit {
           //console.log(this.weatherData);
           this.loader = false;
           
-          resolve();
+          resolve(responseData);
         });
       
     }) 
@@ -168,29 +186,57 @@ export class WeatherPage implements OnInit {
     })
     loadingContent.present();
    this.tabContent='forcust';
-   this.weather.getForcastWeather({
+   const currentPlaceForcast = this.weather.getCacheWeatherForcastCurrentPlace();
+   if (currentPlaceForcast) {
+    this.weatherForcast = currentPlaceForcast.forcast;
+    loadingContent.dismiss();
+   } else {
+    this.weather.getForcastWeather({
       lat:this.currentLocation.lat, 
       lng:this.currentLocation.lng,
       type :this.type
     }).subscribe((responseData)=>{
-      
+      this.weather.putCacheWeatherForcastCurrentPlace({
+        place : {
+          lat : this.currentLocation.lat,
+          lng : this.currentLocation.lng,
+        },
+        forcast : responseData
+      })
       this.weatherForcast = responseData;
       //console.log(this.weatherForcast);
       loadingContent.dismiss();
     });
    }
+   
+   }
     
   }
   doRefresh(refresher) {
-    var loadingContent = this.loaderctrl.create({
-      content: 'Please wait, Weaher is reloading ...',
-    })
-    loadingContent.present();
-    this.getWeather().then(()=>{
-      loadingContent.dismiss();
-      //console.log('Async operation has ended');
+
+    const currentCacheWeather = this.weather.getCacheWeatherCurrent();
+    const currentCacheWeatherSearch = this.weather.getCacheWeatherSearchPlace();
+    if (!currentCacheWeather && !currentCacheWeather) {
+      var loadingContent = this.loaderctrl.create({
+        content: 'Please wait, Weaher is reloading ...',
+      })
+      loadingContent.present();
+      this.getWeather().then(()=>{
+        loadingContent.dismiss();
+        //console.log('Async operation has ended');
+        refresher.complete();
+      });
+    } else {
+      if (this.currentLocation.address == currentCacheWeather.place.address) {
+        this.weatherData = currentCacheWeather.weather;
+        this.currentLocation.address = currentCacheWeather.place.address; 
+      } else if (this.currentLocation.address == currentCacheWeatherSearch.place.address) {
+        this.weatherData = currentCacheWeatherSearch.weather;
+        this.currentLocation.address = currentCacheWeatherSearch.place.address; 
+      }
       refresher.complete();
-    });
+    }
+    
 
     
   }
